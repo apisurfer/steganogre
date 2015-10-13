@@ -1,0 +1,30 @@
+{
+  "name": "steganogre",
+  "version": "0.0.1",
+  "description": "Simple steganography lib for browsers. Ported and refactored from steganographyjs by Peter Eigenschink",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/popc0rn/steganogre.git"
+  },
+  "keywords": [
+    "steganography",
+    "picture",
+    "image",
+    "hide",
+    "ogre"
+  ],
+  "author": "popc0rn; originally: Peter Eigenschink",
+  "license": "GPL-2.0",
+  "bugs": {
+    "url": "https://github.com/popc0rn/steganogre/issues"
+  },
+  "homepage": "https://github.com/popc0rn/steganogre#readme",
+  "devDependencies": {
+    "browserify": "^11.2.0",
+    "watchify": "^3.4.0"
+  }
+}
