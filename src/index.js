@@ -10,10 +10,20 @@ var encode = require('./encode');
 var decode = require('./decode');
 var getHidingCapacity = require('./getHidingCapacity');
 
-module.exports = {
-  encode: encode,
-  decode: decode,
-  getHidingCapacity,
-};
+function initLibrary() {
+  return {
+    encode: encode,
+    decode: decode,
+    getHidingCapacity: getHidingCapacity,
+  };
+}
 
-window.steganography = window.steg = module.exports;
+// expose for commonjs, amd and globs
+(function(name, definition) {
+    if (typeof module != 'undefined') module.exports = definition();
+    else if (typeof define == 'function' && typeof define.amd == 'object') define(definition);
+    else this[name] = definition();
+}('steganogre', initLibrary));
+
+// TODO: remove this code; only used while hackking together inital version
+window.steg = initLibrary();
