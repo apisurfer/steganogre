@@ -25,6 +25,7 @@
   "homepage": "https://github.com/popc0rn/steganogre#readme",
   "devDependencies": {
     "browserify": "^11.2.0",
+    "uglify-js": "^2.5.0",
     "watchify": "^3.4.0"
   }
 }
