@@ -27,12 +27,16 @@ module.exports = {
 
   sum: function(func, end, options) {
     var sum = 0;
-    var i;
+    var current;
+    var increment;
 
     options = options || {};
+    current = options.start || 0
+    increment = options.inc || 1;
 
-    for(i = options.start || 0; i < end; i += (options.inc || 1)) {
-      sum += func(i) || 0;
+    while(current < end) {
+      sum += func(current) || 0;
+      current += increment;
     }
 
     return (sum === 0 && options.defValue ? options.defValue : sum);
