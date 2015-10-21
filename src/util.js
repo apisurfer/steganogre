@@ -34,7 +34,7 @@ module.exports = {
     current = options.start || 0
     increment = options.inc || 1;
 
-    while(current < end) {
+    while (current < end) {
       sum += func(current) || 0;
       current += increment;
     }
@@ -48,15 +48,23 @@ module.exports = {
 
   product: function(func, end, options) {
     var prod = 1;
-    var i;
+    var current;
+    var increment;
 
     options = options || {};
+    current = options.start || 0;
+    increment = options.inc || 1;
 
-    for(i = options.start || 0; i < end; i += (options.inc || 1)) {
-      prod *= func(i) || 1;
+    while (current < end) {
+      prod *= func(current) || 1;
+      current += increment;
     }
 
-    return (prod === 1 && options.defValue ? options.defValue : prod);
+    if (prod === 1) {
+      prod = options.defValue || prod;
+    }
+
+    return prod;
   },
 
   createArrayFromArgs: function(args, index, threshold) {
