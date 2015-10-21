@@ -39,7 +39,11 @@ module.exports = {
       current += increment;
     }
 
-    return (sum === 0 && options.defValue ? options.defValue : sum);
+    if (sum === 0) {
+      sum = options.defValue || sum;
+    }
+
+    return sum;
   },
 
   product: function(func, end, options) {
