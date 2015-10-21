@@ -1,4 +1,5 @@
 var util = require('../src/util');
+var config  = require('../src/config');
 var isPrime = util.isPrime;
 var findNextPrime = util.findNextPrime;
 var sum = util.sum;
@@ -136,5 +137,12 @@ describe('util.product', function () {
     expect(product(mul3, 9, opts)).toBe(315);
     expect(product(mul3, 13, opts)).toBe(280665);
     expect(product(mul3, 17, opts)).toBe(492567075);
+  });
+});
+
+describe('util.createArrayFromArgs', function () {
+  it('should create array with jump in values after given index and go up to treshold value', function () {
+    expect(createArrayFromArgs(config.args, 4, 7)).toEqual([1, 2, 3, 4, 6, 7, 8]);
+    expect(createArrayFromArgs(config.args, 3, 10)).toEqual([1, 2, 3, 5, 6, 7, 8, 9, 10, 11]);
   });
 });
