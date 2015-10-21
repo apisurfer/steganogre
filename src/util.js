@@ -20,11 +20,9 @@ module.exports = {
   isPrime: isPrime,
 
   findNextPrime: function(n) {
-    var i;
+    while(!isPrime(n++));
 
-    for(i = n; true; i += 1) {
-      if(isPrime(i)) return i;
-    }
+    return n - 1;
   },
 
   sum: function(func, end, options) {
