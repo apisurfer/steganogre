@@ -1,12 +1,6 @@
 var config = require('./config');
 
-module.exports = function(image, options) {
-  options = options || {};
-
-  var width = options.width || image.width;
-  var height = options.height || image.height;
-  var t = options.t || config.t;
-  var codeUnitSize = options.codeUnitSize || config.codeUnitSize;
-
-  return t * width * height / codeUnitSize >> 0;
-}
+module.exports = function(image) {
+  if (!image.width || !image.height) return 0;
+  return config.t * image.width * image.height / config.codeUnitSize >> 0;
+};
