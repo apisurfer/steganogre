@@ -1,12 +1,11 @@
 var config = require('./config');
 var util = require('./util');
 
-module.exports = function(message, image, options) {
+module.exports = function(message, image) {
   var shadowCanvas = document.createElement('canvas');
   var shadowCtx = shadowCanvas.getContext('2d');
   var dataURL;
 
-  options = options || {};
   shadowCanvas.style.display = 'none';
 
   if (image.length) {
@@ -15,26 +14,21 @@ module.exports = function(message, image, options) {
     image.src = dataURL;
   }
 
-  shadowCanvas.width = options.width || image.width;
-  shadowCanvas.height = options.height || image.height;
-
-  if (options.height && options.width) {
-    shadowCtx.drawImage(image, 0, 0, options.width, options.height);
-  } else {
-    shadowCtx.drawImage(image, 0, 0);
-  }
+  shadowCanvas.width = image.width;
+  shadowCanvas.height = image.height;
+  shadowCtx.drawImage(image, 0, 0, image.width, image.height);
 
   var imageData = shadowCtx.getImageData(0, 0, shadowCanvas.width, shadowCanvas.height),
   data = imageData.data;
   // bundlesPerChar ... Count of full t-bit-sized bundles per Character
   // overlapping ... Count of bits of the currently handled character which are not handled during each run
-  var t = options.t || config.t;
-  var threshold = options.threshold || config.threshold;
-  var codeUnitSize = options.codeUnitSize || config.codeUnitSize;
+  var t = config.t;
+  var threshold = config.threshold;
+  var codeUnitSize = config.codeUnitSize;
   var bundlesPerChar = codeUnitSize / t >> 0;
   var overlapping = codeUnitSize % t;
-  var messageDelimiter = options.messageDelimiter || config.messageDelimiter;
-  var args = options.args || config.args;
+  var messageDelimiter = config.messageDelimiter;
+  var args = config.args;
   var prime = util.findNextPrime(Math.pow(2,t));
   var decM, oldDec, oldMask, modMessage = [], left, right;
 
