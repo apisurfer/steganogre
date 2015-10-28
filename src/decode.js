@@ -14,6 +14,7 @@ module.exports = function(image) {
   var messageCompleted = config.messageCompleted;
   var shadow;
   var data;
+  var done;
   // loop vars
   var i;
   var k;
