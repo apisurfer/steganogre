@@ -14,6 +14,9 @@ module.exports = function(image) {
   var messageCompleted = config.messageCompleted;
   var shadow;
   var data;
+  // loop vars
+  var i;
+  var k;
 
   if (!t || (t < 1 || t > 7)) throw 'Error: Parameter t = ' + t + ' is not valid: 0 < t < 8';
 
@@ -23,14 +26,14 @@ module.exports = function(image) {
   data = shadow.imageData.data;
 
   if (threshold === 1) {
-    for (var i = 3, done = false; !done && i < data.length && !done; i += 4) {
+    for (i = 3, done = false; !done && i < data.length && !done; i += 4) {
       done = messageCompleted(data, i, threshold);
       if (!done) modMessage.push(data[i] - (255 - prime + 1));
     }
   } else {
-    for (var k = 0, done = false; !done; k += 1) {
+    for (k = 0, done = false; !done; k += 1) {
       q = [];
-      for (var i = (k * threshold * 4) + 3; i < (k + 1) * threshold * 4 && i < data.length && !done; i += 4) {
+      for (i = (k * threshold * 4) + 3; i < (k + 1) * threshold * 4 && i < data.length && !done; i += 4) {
         done = messageCompleted(data,i,threshold);
         if (!done) q.push(data[i] - (255 - prime + 1)); // at Array index (i-((k*threshold*4)+3))/4
       }
@@ -51,14 +54,17 @@ module.exports = function(image) {
       // Calculate the coefficients which are different for each order of the variable and for each argument
       // i.e. for order=0 and args[0] coeff=args[1]*args[2]*...*args[threshold-1]
       var orderVariableCoefficients = function(order, varIndex) {
-        var workingArgs = util.createArrayFromArgs(args,varIndex,q.length), maxRec = q.length - (order + 1);
+        var workingArgs = util.createArrayFromArgs(args,varIndex,q.length);
+        var maxRec = q.length - (order + 1);
+
         return (function(startIndex, endIndex, recDepth) {
           var recall = arguments.callee;
+
           return util.sum(function(i) {
             if (recDepth < maxRec)
-              return workingArgs[i] * recall(i + 1,startIndex + order + 2,recDepth + 1);
+              return workingArgs[i] * recall(i + 1, startIndex + order + 2, recDepth + 1);
           }, endIndex, {'start': startIndex, 'defValue': 1});
-        }(0,order + 1,0));
+        }(0, order + 1, 0));
       };
       // Calculate the common denominator of the whole term
       var commonDenominator = util.product(function(i) {
@@ -67,8 +73,8 @@ module.exports = function(image) {
         }, q.length);
       }, q.length);
 
-      for (var i = 0; i < q.length; i += 1) {
-        modMessage.push((((Math.pow(-1,q.length - (i + 1)) * util.sum(function(j) {
+      for (i = 0; i < q.length; i += 1) {
+        modMessage.push((((Math.pow(-1, q.length - (i + 1)) * util.sum(function(j) {
           return orderVariableCoefficients(i,j) *
           variableCoefficients[j];
           }, q.length)) % prime) + prime) % prime); // ?divide by commonDenominator?
@@ -76,8 +82,12 @@ module.exports = function(image) {
     }
   }
 
-  var message = '', charCode = 0, bitCount = 0, mask = Math.pow(2, codeUnitSize) - 1;
-  for (var i = 0; i < modMessage.length; i += 1) {
+  var message = '';
+  var charCode = 0;
+  var bitCount = 0;
+  var mask = Math.pow(2, codeUnitSize) - 1;
+
+  for (i = 0; i < modMessage.length; i += 1) {
     charCode += modMessage[i] << bitCount;
     bitCount += t;
     if (bitCount >= codeUnitSize) {
