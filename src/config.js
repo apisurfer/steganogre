@@ -7,11 +7,11 @@ module.exports = {
     return i + 1;
   },
 
-  messageDelimiter: function(modMessage,threshold) {
+  messageDelimiter: function(modMessage, threshold) {
     var delimiter = new Array(threshold * 3);
     var i;
 
-    for(i = 0; i < delimiter.length; i += 1) {
+    for(i = 0; i < delimiter.length; i++) {
       delimiter[i] = 255;
     }
 
@@ -22,7 +22,7 @@ module.exports = {
     var done = true;
     var j;
 
-    for(j = 0; j < 16 && done; j += 1) {
+    for(j = 0; j < 16 && done; j++) {
       done = done && (data[i + j * 4] === 255);
     }
 
