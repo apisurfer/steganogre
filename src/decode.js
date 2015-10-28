@@ -1,7 +1,7 @@
 var config = require('./config');
 var util = require('./util');
 
-module.exports = function(image, options) {
+module.exports = function(image) {
   var t = config.t;
   var threshold = config.threshold;
   var codeUnitSize = config.codeUnitSize;
@@ -26,13 +26,9 @@ module.exports = function(image, options) {
     image = new Image();
     image.src = dataURL;
   }
-  shadowCanvas.width = options.width || image.width;
-  shadowCanvas.height = options.width || image.height;
-  if (options.height && options.width) {
-    shadowCtx.drawImage(image, 0, 0, options.width, options.height);
-  } else {
-    shadowCtx.drawImage(image, 0, 0);
-  }
+  shadowCanvas.width = image.width;
+  shadowCanvas.height = image.height;
+  shadowCtx.drawImage(image, 0, 0, image.width, image.height);
 
   imageData = shadowCtx.getImageData(0, 0, shadowCanvas.width, shadowCanvas.height);
   data = imageData.data;
