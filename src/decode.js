@@ -1,35 +1,26 @@
 var config = require('./config');
 var util = require('./util');
 var imageFromDataURL = require('./imageFromDataURL');
+var createShadowCanvas = require('./createShadowCanvas');
 
 module.exports = function(image) {
   var t = config.t;
   var threshold = config.threshold;
   var codeUnitSize = config.codeUnitSize;
   var prime = util.findNextPrime(Math.pow(2, t));
-  var imageData;
-  var data;
   var q;
   var args = config.args;
   var modMessage = [];
   var messageCompleted = config.messageCompleted;
+  var shadow;
+  var data;
 
   if (!t || (t < 1 || t > 7)) throw 'Error: Parameter t = ' + t + ' is not valid: 0 < t < 8';
 
-  var shadowCanvas = document.createElement('canvas'),
-  shadowCtx = shadowCanvas.getContext('2d');
-
-  shadowCanvas.style.display = 'none';
-  document.body.appendChild(shadowCanvas);
-
   image = image.length ? imageFromDataURL(image) : image;
 
-  shadowCanvas.width = image.width;
-  shadowCanvas.height = image.height;
-  shadowCtx.drawImage(image, 0, 0, image.width, image.height);
-
-  imageData = shadowCtx.getImageData(0, 0, shadowCanvas.width, shadowCanvas.height);
-  data = imageData.data;
+  shadow = createShadowCanvas(image);
+  data = shadow.imageData.data;
 
   if (threshold === 1) {
     for (var i = 3, done = false; !done && i < data.length && !done; i += 4) {

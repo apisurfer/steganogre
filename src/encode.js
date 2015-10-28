@@ -1,22 +1,11 @@
 var config = require('./config');
 var util = require('./util');
 var imageFromDataURL = require('./imageFromDataURL');
+var createShadowCanvas = require('./createShadowCanvas');
 
 module.exports = function(message, image) {
-  var shadowCanvas = document.createElement('canvas');
-  var shadowCtx = shadowCanvas.getContext('2d');
-  var dataURL;
-
-  shadowCanvas.style.display = 'none';
-
-  image = image.length ? imageFromDataURL(image) : image;
-
-  shadowCanvas.width = image.width;
-  shadowCanvas.height = image.height;
-  shadowCtx.drawImage(image, 0, 0, image.width, image.height);
-
-  var imageData = shadowCtx.getImageData(0, 0, shadowCanvas.width, shadowCanvas.height),
-  data = imageData.data;
+  var shadow;
+  var data;
   // bundlesPerChar ... Count of full t-bit-sized bundles per Character
   // overlapping ... Count of bits of the currently handled character which are not handled during each run
   var t = config.t;
@@ -28,6 +17,11 @@ module.exports = function(message, image) {
   var args = config.args;
   var prime = util.findNextPrime(Math.pow(2,t));
   var decM, oldDec, oldMask, modMessage = [], left, right;
+
+  image = image.length ? imageFromDataURL(image) : image;
+
+  shadow = createShadowCanvas(image);
+  data = shadow.imageData.data;
 
   for (var i = 0; i <= message.length; i += 1) {
     // dec ... UTF-16 Unicode of the i-th character of the message
@@ -89,8 +83,8 @@ module.exports = function(message, image) {
   // Clear remaining data
   for (var i = ((index + 1) * 4) + 3; i < data.length; i += 4) data[i] = 255;
 
-    imageData.data = data;
-  shadowCtx.putImageData(imageData, 0, 0);
+  shadow.imageData.data = data;
+  shadow.context.putImageData(shadow.imageData, 0, 0);
 
-  return shadowCanvas.toDataURL();
+  return shadow.canvas.toDataURL();
 };
