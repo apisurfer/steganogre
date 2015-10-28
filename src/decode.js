@@ -103,13 +103,17 @@ module.exports = function(image) {
   for (i = 0; i < modMessage.length; i += 1) {
     charCode += modMessage[i] << bitCount;
     bitCount += t;
+
     if (bitCount >= codeUnitSize) {
       message += String.fromCharCode(charCode & mask);
       bitCount %= codeUnitSize;
       charCode = modMessage[i] >> (t - bitCount);
     }
   }
-  if (charCode !== 0) message += String.fromCharCode(charCode & mask);
+
+  if (charCode !== 0) {
+    message += String.fromCharCode(charCode & mask);
+  }
 
   return message;
 };
