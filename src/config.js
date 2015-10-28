@@ -18,7 +18,7 @@ module.exports = {
     return delimiter;
   },
 
-  messageCompleted: function(data, i, threshold) {
+  messageCompleted: function(data, i) {
     var done = true;
     var j;
 

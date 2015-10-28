@@ -28,7 +28,7 @@ module.exports = function(image) {
 
   if (threshold === 1) {
     for (i = 3, done = false; !done && i < data.length; i += 4) {
-      done = messageCompleted(data, i, threshold);
+      done = messageCompleted(data, i);
 
       if (!done) {
         modMessage.push(data[i] - (255 - prime + 1));
@@ -39,7 +39,7 @@ module.exports = function(image) {
       q = [];
 
       for (i = (k * threshold * 4) + 3; i < (k + 1) * threshold * 4 && i < data.length && !done; i += 4) {
-        done = messageCompleted(data, i, threshold);
+        done = messageCompleted(data, i);
 
         if (!done) {
           q.push(data[i] - (255 - prime + 1)); // at Array index (i-((k*threshold*4)+3))/4
