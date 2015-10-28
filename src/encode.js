@@ -47,14 +47,16 @@ module.exports = function(message, image) {
       modMessage.push(left + right);
 
       if (i < message.length) {
-        mask = Math.pow(2,2 * t - curOverlapping) * (1 - Math.pow(2, -t));
+        mask = Math.pow(2, 2 * t - curOverlapping) * (1 - Math.pow(2, -t));
+
         for (j = 1; j < bundlesPerChar; j += 1) {
           decM = dec & mask;
           modMessage.push(decM >> (((j - 1) * t) + (t - curOverlapping)));
           mask <<= t;
         }
+
         if ((overlapping * (i + 1)) % t === 0) {
-          mask = Math.pow(2, codeUnitSize) * (1 - Math.pow(2,-t));
+          mask = Math.pow(2, codeUnitSize) * (1 - Math.pow(2, -t));
           decM = dec & mask;
           modMessage.push(decM >> (codeUnitSize - t));
         } else if (((((overlapping * (i + 1)) % t) + (t - curOverlapping)) <= t)) {
@@ -64,12 +66,14 @@ module.exports = function(message, image) {
       }
     } else if (i < message.length) {
       mask = Math.pow(2,t) - 1;
+
       for (j = 0; j < bundlesPerChar; j += 1) {
         decM = dec & mask;
         modMessage.push(decM >> (j * t));
         mask <<= t;
       }
     }
+
     oldDec = dec;
   }
 
@@ -80,23 +84,34 @@ module.exports = function(message, image) {
   var delimiter = messageDelimiter(modMessage,threshold);
 
   for (offset = 0; (offset + threshold) * 4 <= data.length && (offset + threshold) <= modMessage.length; offset += threshold) {
-    var q, qS = [];
+    var q;
+    var qS = [];
+
     for (i = 0; i < threshold && i + offset < modMessage.length; i += 1) {
       q = 0;
-      for (j = offset; j < threshold + offset && j < modMessage.length; j += 1)
+
+      for (j = offset; j < threshold + offset && j < modMessage.length; j += 1) {
         q += modMessage[j] * Math.pow(args(i),j - offset);
+      }
+
       qS[i] = (255 - prime + 1) + (q % prime);
     }
-    for (i = offset * 4; i < (offset + qS.length) * 4 && i < data.length; i += 4)
+
+    for (i = offset * 4; i < (offset + qS.length) * 4 && i < data.length; i += 4) {
       data[i + 3] = qS[(i / 4) % threshold];
+    }
 
     subOffset = qS.length;
   }
   // Write message-delimiter
-  for (index = (offset + subOffset); index - (offset + subOffset) < delimiter.length && (offset + delimiter.length) * 4 < data.length; index += 1)
+  for (index = (offset + subOffset); index - (offset + subOffset) < delimiter.length && (offset + delimiter.length) * 4 < data.length; index += 1) {
     data[(index * 4) + 3] = delimiter[index - (offset + subOffset)];
+  }
+
   // Clear remaining data
-  for (i = ((index + 1) * 4) + 3; i < data.length; i += 4) data[i] = 255;
+  for (i = ((index + 1) * 4) + 3; i < data.length; i += 4) {
+    data[i] = 255;
+  }
 
   shadow.imageData.data = data;
   shadow.context.putImageData(shadow.imageData, 0, 0);
