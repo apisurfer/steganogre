@@ -1,5 +1,6 @@
 var config = require('./config');
 var util = require('./util');
+var imageFromDataURL = require('./imageFromDataURL');
 
 module.exports = function(image) {
   var t = config.t;
@@ -21,11 +22,8 @@ module.exports = function(image) {
   shadowCanvas.style.display = 'none';
   document.body.appendChild(shadowCanvas);
 
-  if (image.length) {
-    var dataURL = image;
-    image = new Image();
-    image.src = dataURL;
-  }
+  image = image.length ? imageFromDataURL(image) : image;
+
   shadowCanvas.width = image.width;
   shadowCanvas.height = image.height;
   shadowCtx.drawImage(image, 0, 0, image.width, image.height);
