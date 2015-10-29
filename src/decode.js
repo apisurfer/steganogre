@@ -2,16 +2,30 @@ var config = require('./config');
 var util = require('./util');
 var imageFromDataURL = require('./imageFromDataURL');
 var createShadowCanvas = require('./createShadowCanvas');
+var messageCompleted = config.messageCompleted;
+var args = config.args;
+var t = config.t;
+var threshold = config.threshold;
+var codeUnitSize = config.codeUnitSize;
+var prime = util.findNextPrime(Math.pow(2, t));
+
+function getModMessage(data) {
+  var i = 3; // first alpha value
+  var modMessage = [];
+
+  while(i < data.length) {
+    if (messageCompleted(data, i)) break;
+
+    modMessage.push(data[i] - (255 - prime + 1));
+    i += 4; // step only through alpha values
+  }
+
+  return modMessage;
+}
 
 module.exports = function(image) {
-  var t = config.t;
-  var threshold = config.threshold;
-  var codeUnitSize = config.codeUnitSize;
-  var prime = util.findNextPrime(Math.pow(2, t));
   var q;
-  var args = config.args;
   var modMessage = [];
-  var messageCompleted = config.messageCompleted;
   var shadow;
   var data;
   var done;
@@ -27,13 +41,7 @@ module.exports = function(image) {
   data = shadow.imageData.data;
 
   if (threshold === 1) {
-    for (i = 3, done = false; !done && i < data.length; i += 4) {
-      done = messageCompleted(data, i);
-
-      if (!done) {
-        modMessage.push(data[i] - (255 - prime + 1));
-      }
-    }
+    modMessage = getModMessage(data);
   } else {
     for (k = 0, done = false; !done; k += 1) {
       q = [];
@@ -45,6 +53,7 @@ module.exports = function(image) {
           q.push(data[i] - (255 - prime + 1)); // at Array index (i-((k*threshold*4)+3))/4
         }
       }
+
       if (q.length === 0) continue;
       // Calculate the coefficients which are the same for any order of the variable, but different for each argument
       // i.e. for args[0] coeff=q[0]*(args[1]-args[2])*(args[1]-args[3])*...(args[1]-args[threshold-1])*...*(args[threshold-1]-args[1])*...*(args[threshold-1]-args[threshold-2])
