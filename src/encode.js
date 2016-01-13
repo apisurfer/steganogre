@@ -13,6 +13,19 @@ function clearRemainingData(startIndex, data) {
   return data;
 }
 
+function writeMessageDelimiter(offset, subOffset, delimiter, data) {
+  var composedOffset = offset + subOffset;
+  var step;
+  var index;
+
+  for (index = composedOffset; index - composedOffset < delimiter.length && (offset + delimiter.length) * 4 < data.length; index++) {
+    step = (index * 4) + 3;
+    data[step] = delimiter[index - composedOffset];
+  }
+
+  return data;
+}
+
 module.exports = function(message, image) {
   var shadow;
   var data;
@@ -113,12 +126,8 @@ module.exports = function(message, image) {
 
     subOffset = qS.length;
   }
-  // Write message-delimiter
-  for (index = (offset + subOffset); index - (offset + subOffset) < delimiter.length && (offset + delimiter.length) * 4 < data.length; index += 1) {
-    data[(index * 4) + 3] = delimiter[index - (offset + subOffset)];
-  }
 
-  // Clear remaining data
+  data = writeMessageDelimiter(offset, subOffset, delimiter, data);
   data = clearRemainingData(((index + 1) * 4) + 3, data);
 
   shadow.imageData.data = data;
