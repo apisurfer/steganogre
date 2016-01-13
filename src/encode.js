@@ -3,6 +3,16 @@ var util = require('./util');
 var imageFromDataURL = require('./imageFromDataURL');
 var createShadowCanvas = require('./createShadowCanvas');
 
+function clearRemainingData(startIndex, data) {
+  var i;
+
+  for (i = startIndex; i < data.length; i += 4) {
+    data[i] = 255;
+  }
+
+  return data;
+}
+
 module.exports = function(message, image) {
   var shadow;
   var data;
@@ -15,7 +25,7 @@ module.exports = function(message, image) {
   var overlapping = codeUnitSize % t;
   var messageDelimiter = config.messageDelimiter;
   var args = config.args;
-  var prime = util.findNextPrime(Math.pow(2,t));
+  var prime = util.findNextPrime(Math.pow(2, t));
   var decM;
   var oldDec;
   var oldMask;
@@ -81,7 +91,7 @@ module.exports = function(message, image) {
   var offset;
   var index;
   var subOffset;
-  var delimiter = messageDelimiter(modMessage,threshold);
+  var delimiter = messageDelimiter(modMessage, threshold);
 
   for (offset = 0; (offset + threshold) * 4 <= data.length && (offset + threshold) <= modMessage.length; offset += threshold) {
     var q;
@@ -109,9 +119,7 @@ module.exports = function(message, image) {
   }
 
   // Clear remaining data
-  for (i = ((index + 1) * 4) + 3; i < data.length; i += 4) {
-    data[i] = 255;
-  }
+  data = clearRemainingData(((index + 1) * 4) + 3, data);
 
   shadow.imageData.data = data;
   shadow.context.putImageData(shadow.imageData, 0, 0);
