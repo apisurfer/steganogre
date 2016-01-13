@@ -3,11 +3,8 @@ var util = require('./util');
 var imageFromDataURL = require('./imageFromDataURL');
 var createShadowCanvas = require('./createShadowCanvas');
 var messageCompleted = config.messageCompleted;
-var args = config.args;
-var t = config.t;
-var threshold = config.threshold;
 var codeUnitSize = config.codeUnitSize;
-var prime = util.findNextPrime(Math.pow(2, t));
+var prime = util.findNextPrime(Math.pow(2, config.t));
 
 function getModMessage(data) {
   var i = 3; // first alpha value
@@ -47,12 +44,12 @@ module.exports = function(image) {
 
   for (i = 0; i < modMessage.length; i += 1) {
     charCode += modMessage[i] << bitCount;
-    bitCount += t;
+    bitCount += config.t;
 
     if (bitCount >= codeUnitSize) {
       message += String.fromCharCode(charCode & mask);
       bitCount %= codeUnitSize;
-      charCode = modMessage[i] >> (t - bitCount);
+      charCode = modMessage[i] >> (config.t - bitCount);
     }
   }
 
