@@ -33,8 +33,6 @@ module.exports = function(image) {
   var i;
   var k;
 
-  if (!t || (t < 1 || t > 7)) throw 'Error: Parameter t = ' + t + ' is not valid: 0 < t < 8';
-
   image = image.length ? imageFromDataURL(image) : image;
 
   shadow = createShadowCanvas(image);
