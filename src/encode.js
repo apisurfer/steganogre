@@ -3,6 +3,28 @@ var util = require('./util');
 var imageFromDataURL = require('./imageFromDataURL');
 var createShadowCanvas = require('./createShadowCanvas');
 
+var shadow;
+var data;
+var t = config.t;
+var threshold = config.threshold;
+var codeUnitSize = config.codeUnitSize;
+// bundlesPerChar ... Count of full t-bit-sized bundles per Character
+// overlapping ... Count of bits of the currently handled character which are not handled during each run
+var bundlesPerChar = codeUnitSize / t >> 0;
+var overlapping = codeUnitSize % t;
+var messageDelimiter = config.messageDelimiter;
+var args = config.args;
+var prime = util.findNextPrime(Math.pow(2, t));
+var decM;
+var oldDec;
+var oldMask;
+var modMessage = [];
+var left;
+var right;
+// loop vars
+var i;
+var j;
+
 function clearRemainingData(startIndex, data) {
   var i;
 
@@ -26,29 +48,18 @@ function writeMessageDelimiter(offset, subOffset, delimiter, data) {
   return data;
 }
 
-module.exports = function(message, image) {
-  var shadow;
-  var data;
-  // bundlesPerChar ... Count of full t-bit-sized bundles per Character
-  // overlapping ... Count of bits of the currently handled character which are not handled during each run
-  var t = config.t;
-  var threshold = config.threshold;
-  var codeUnitSize = config.codeUnitSize;
-  var bundlesPerChar = codeUnitSize / t >> 0;
-  var overlapping = codeUnitSize % t;
-  var messageDelimiter = config.messageDelimiter;
-  var args = config.args;
-  var prime = util.findNextPrime(Math.pow(2, t));
-  var decM;
-  var oldDec;
-  var oldMask;
-  var modMessage = [];
-  var left;
-  var right;
-  // loop vars
-  var i;
+function calculateQ(offset, modMessage, index) {
   var j;
+  var q = 0;
 
+  for (j = offset; j < threshold + offset && j < modMessage.length; j++) {
+    q += modMessage[j] * Math.pow(args(index), j - offset);
+  }
+
+  return q;
+}
+
+module.exports = function(message, image) {
   image = image.length ? imageFromDataURL(image) : image;
 
   shadow = createShadowCanvas(image);
@@ -111,12 +122,7 @@ module.exports = function(message, image) {
     var qS = [];
 
     for (i = 0; i < threshold && i + offset < modMessage.length; i += 1) {
-      q = 0;
-
-      for (j = offset; j < threshold + offset && j < modMessage.length; j += 1) {
-        q += modMessage[j] * Math.pow(args(i),j - offset);
-      }
-
+      q = calculateQ(offset, modMessage, i);
       qS[i] = (255 - prime + 1) + (q % prime);
     }
 
