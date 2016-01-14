@@ -139,14 +139,14 @@ module.exports = function(message, image) {
   var index;
   var subOffset;
   var delimiter = messageDelimiter(modMessage, threshold);
+  var qS;
 
   for (offset = 0; (offset + threshold) * 4 <= data.length && (offset + threshold) <= modMessage.length; offset += threshold) {
-    var qS = calculateQs(offset, modMessage);
+    qS = calculateQs(offset, modMessage);
     data = alterImageData(qS, offset, data);
-    subOffset = qS.length;
   }
 
-  data = writeMessageDelimiter(offset, subOffset, delimiter, data);
+  data = writeMessageDelimiter(offset, qS.length, delimiter, data);
   data = clearRemainingData(((index + 1) * 4) + 3, data);
 
   shadow.imageData.data = data;
