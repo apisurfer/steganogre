@@ -72,6 +72,16 @@ function calculateQs(offset, modMessage) {
   return qS;
 }
 
+function alterImageData(qS, offset, data) {
+  var i;
+
+  for (i = offset * 4; i < (offset + qS.length) * 4 && i < data.length; i += 4) {
+    data[i + 3] = qS[(i / 4) % threshold];
+  }
+
+  return data;
+}
+
 module.exports = function(message, image) {
   image = image.length ? imageFromDataURL(image) : image;
 
@@ -132,11 +142,7 @@ module.exports = function(message, image) {
 
   for (offset = 0; (offset + threshold) * 4 <= data.length && (offset + threshold) <= modMessage.length; offset += threshold) {
     var qS = calculateQs(offset, modMessage);
-
-    for (i = offset * 4; i < (offset + qS.length) * 4 && i < data.length; i += 4) {
-      data[i + 3] = qS[(i / 4) % threshold];
-    }
-
+    data = alterImageData(qS, offset, data);
     subOffset = qS.length;
   }
 
