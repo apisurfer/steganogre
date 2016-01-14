@@ -59,6 +59,19 @@ function calculateQ(offset, modMessage, index) {
   return q;
 }
 
+function calculateQs(offset, modMessage) {
+  var i;
+  var q;
+  var qS = [];
+
+  for (i = 0; i < threshold && i + offset < modMessage.length; i++) {
+    q = calculateQ(offset, modMessage, i);
+    qS[i] = (255 - prime + 1) + (q % prime);
+  }
+
+  return qS;
+}
+
 module.exports = function(message, image) {
   image = image.length ? imageFromDataURL(image) : image;
 
@@ -118,13 +131,7 @@ module.exports = function(message, image) {
   var delimiter = messageDelimiter(modMessage, threshold);
 
   for (offset = 0; (offset + threshold) * 4 <= data.length && (offset + threshold) <= modMessage.length; offset += threshold) {
-    var q;
-    var qS = [];
-
-    for (i = 0; i < threshold && i + offset < modMessage.length; i += 1) {
-      q = calculateQ(offset, modMessage, i);
-      qS[i] = (255 - prime + 1) + (q % prime);
-    }
+    var qS = calculateQs(offset, modMessage);
 
     for (i = offset * 4; i < (offset + qS.length) * 4 && i < data.length; i += 4) {
       data[i + 3] = qS[(i / 4) % threshold];
