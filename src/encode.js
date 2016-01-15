@@ -27,8 +27,9 @@ var j;
 
 function clearRemainingData(startIndex, data) {
   var i;
+  var startAt = ((startIndex + 1) * 4) + 3;
 
-  for (i = startIndex; i < data.length; i += 4) {
+  for (i = startAt; i < data.length; i += 4) {
     data[i] = 255;
   }
 
@@ -45,7 +46,10 @@ function writeMessageDelimiter(offset, subOffset, delimiter, data) {
     data[step] = delimiter[index - composedOffset];
   }
 
-  return data;
+  return {
+    data: data,
+    stoppedAt: index,
+  };
 }
 
 function calculateQ(offset, modMessage, index) {
@@ -152,13 +156,10 @@ module.exports = function(message, image) {
 
   // Write Data
   var offset;
-  var index;
-  var subOffset;
   var delimiter = messageDelimiter(modMessage, threshold);
   var newImgInfo = writeMessage(data, modMessage);
-
-  data = writeMessageDelimiter(newImgInfo.offset, newImgInfo.qSLength, delimiter, newImgInfo.data);
-  data = clearRemainingData(((index + 1) * 4) + 3, data);
+  var delimiterInfo = writeMessageDelimiter(newImgInfo.offset, newImgInfo.qSLength, delimiter, newImgInfo.data);
+  data = clearRemainingData(delimiterInfo.stoppedAt, delimiterInfo.data);
 
   shadow.imageData.data = data;
   shadow.context.putImageData(shadow.imageData, 0, 0);
