@@ -116,6 +116,21 @@ function simpleEncode(dec, modMessage) {
   return modMessage;
 }
 
+function handleOverlapping(index, dec, mask, curOverlapping, modMessage) {
+  var decM;
+
+  if ((OVERLAPPING * (index + 1)) % T === 0) {
+    mask = Math.pow(2, CODE_UNIT_SIZE) * (1 - Math.pow(2, -T));
+    decM = dec & mask;
+    modMessage.push(decM >> (CODE_UNIT_SIZE - T));
+  } else if (((((OVERLAPPING * (index + 1)) % T) + (T - curOverlapping)) <= T)) {
+    decM = dec & mask;
+    modMessage.push(decM >> (((BUNDLES_PER_CHAR - 1) * T) + (T - curOverlapping)));
+  }
+
+  return modMessage;
+}
+
 function encodeMessage(message) {
   var i;
   var j
@@ -152,14 +167,7 @@ function encodeMessage(message) {
           mask <<= T;
         }
 
-        if ((OVERLAPPING * (i + 1)) % T === 0) {
-          mask = Math.pow(2, CODE_UNIT_SIZE) * (1 - Math.pow(2, -T));
-          decM = dec & mask;
-          modMessage.push(decM >> (CODE_UNIT_SIZE - T));
-        } else if (((((OVERLAPPING * (i + 1)) % T) + (T - curOverlapping)) <= T)) {
-          decM = dec & mask;
-          modMessage.push(decM >> (((BUNDLES_PER_CHAR - 1) * T) + (T - curOverlapping)));
-        }
+        modMessage = handleOverlapping(i, dec, mask, curOverlapping, modMessage);
       }
     } else if (i < message.length) {
       modMessage = simpleEncode(dec, modMessage);
