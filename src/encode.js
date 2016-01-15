@@ -25,6 +25,7 @@ var right;
 var i;
 var j;
 
+// mutates data
 function clearRemainingData(startIndex, data) {
   var i;
   var startAt = ((startIndex + 1) * 4) + 3;
@@ -36,6 +37,7 @@ function clearRemainingData(startIndex, data) {
   return data;
 }
 
+// mutates data
 function writeMessageDelimiter(offset, subOffset, delimiter, data) {
   var composedOffset = offset + subOffset;
   var step;
@@ -76,6 +78,7 @@ function calculateQs(offset, modMessage) {
   return qS;
 }
 
+// mutates data
 function alterImageData(qS, offset, data) {
   var i;
 
@@ -155,7 +158,6 @@ module.exports = function(message, image) {
   }
 
   // Write Data
-  var offset;
   var delimiter = messageDelimiter(modMessage, threshold);
   var newImgInfo = writeMessage(data, modMessage);
   var delimiterInfo = writeMessageDelimiter(newImgInfo.offset, newImgInfo.qSLength, delimiter, newImgInfo.data);
