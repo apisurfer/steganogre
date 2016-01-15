@@ -13,6 +13,10 @@ var OVERLAPPING = CODE_UNIT_SIZE % T;
 var PRIME = util.findNextPrime(Math.pow(2, T));
 var delimitMessage = config.delimitMessage;
 
+/**
+ * Following functions deal with writting the encoded message to an image data obj
+ */
+
 // mutates data
 function clearRemainingData(startIndex, data) {
   var i;
@@ -93,6 +97,25 @@ function writeMessage(imgData, modMessage) {
   };
 }
 
+/**
+ * Following functions deal with message encoding prior to hidding it in an image date
+ */
+
+// mutates modMessage
+function simpleEncode(dec, modMessage) {
+  var mask = Math.pow(2, T) - 1;
+  var j;
+  var decM;
+
+  for (j = 0; j < BUNDLES_PER_CHAR; j++) {
+    decM = dec & mask;
+    modMessage.push(decM >> (j * T));
+    mask <<= T;
+  }
+
+  return modMessage;
+}
+
 function encodeMessage(message) {
   var i;
   var j
@@ -139,13 +162,7 @@ function encodeMessage(message) {
         }
       }
     } else if (i < message.length) {
-      mask = Math.pow(2, T) - 1;
-
-      for (j = 0; j < BUNDLES_PER_CHAR; j++) {
-        decM = dec & mask;
-        modMessage.push(decM >> (j * T));
-        mask <<= T;
-      }
+      modMessage = simpleEncode(dec, modMessage);
     }
 
     oldDec = dec;
