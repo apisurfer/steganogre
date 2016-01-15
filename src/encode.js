@@ -3,8 +3,6 @@ var util = require('./util');
 var imageFromDataURL = require('./imageFromDataURL');
 var createShadowCanvas = require('./createShadowCanvas');
 
-var shadow;
-var data;
 var T = config.t;
 var THRESHOLD = config.threshold;
 var CODE_UNIT_SIZE = config.codeUnitSize;
@@ -14,15 +12,6 @@ var BUNDLES_PER_CHAR = CODE_UNIT_SIZE / T >> 0;
 var OVERLAPPING = CODE_UNIT_SIZE % T;
 var PRIME = util.findNextPrime(Math.pow(2, T));
 var delimitMessage = config.delimitMessage;
-var decM;
-var oldDec;
-var oldMask;
-var modMessage = [];
-var left;
-var right;
-// loop vars
-var i;
-var j;
 
 // mutates data
 function clearRemainingData(startIndex, data) {
@@ -104,19 +93,25 @@ function writeMessage(imgData, modMessage) {
   };
 }
 
-module.exports = function(message, image) {
-  image = image.length ? imageFromDataURL(image) : image;
+function encodeMessage(message) {
+  var i;
+  var j
+  var oldDec;
+  var oldMask;
+  var decM;
+  // dec ... UTF-16 Unicode of the i-th character of the message
+  var dec;
+  // curOverlapping ... The count of the bits of the previous character not handled in the previous run
+  var curOverlapping;
+  // mask ... The raw initial bitmask, will be changed every run and if bits are OVERLAPPING
+  var mask;
+  var modMessage = [];
+  var left;
+  var right;
 
-  shadow = createShadowCanvas(image);
-  data = shadow.imageData.data;
-
-  for (i = 0; i <= message.length; i += 1) {
-    // dec ... UTF-16 Unicode of the i-th character of the message
-    // curOverlapping ... The count of the bits of the previous character not handled in the previous run
-    // mask ... The raw initial bitmask, will be changed every run and if bits are OVERLAPPING
-    var dec = message.charCodeAt(i) || 0;
-    var curOverlapping = (OVERLAPPING * i) % T;
-    var mask;
+  for (i = 0; i <= message.length; i++) {
+    dec = message.charCodeAt(i) || 0;
+    curOverlapping = (OVERLAPPING * i) % T;
 
     if (curOverlapping > 0 && oldDec) {
       mask = Math.pow(2, T - curOverlapping) - 1;
@@ -128,7 +123,7 @@ module.exports = function(message, image) {
       if (i < message.length) {
         mask = Math.pow(2, 2 * T - curOverlapping) * (1 - Math.pow(2, -T));
 
-        for (j = 1; j < BUNDLES_PER_CHAR; j += 1) {
+        for (j = 1; j < BUNDLES_PER_CHAR; j++) {
           decM = dec & mask;
           modMessage.push(decM >> (((j - 1) * T) + (T - curOverlapping)));
           mask <<= T;
@@ -146,7 +141,7 @@ module.exports = function(message, image) {
     } else if (i < message.length) {
       mask = Math.pow(2, T) - 1;
 
-      for (j = 0; j < BUNDLES_PER_CHAR; j += 1) {
+      for (j = 0; j < BUNDLES_PER_CHAR; j++) {
         decM = dec & mask;
         modMessage.push(decM >> (j * T));
         mask <<= T;
@@ -156,9 +151,24 @@ module.exports = function(message, image) {
     oldDec = dec;
   }
 
+  return modMessage;
+}
+
+module.exports = function(message, image) {
+  var shadow;
+  var data;
+  var encodedMessage;
+
+  image = image.length ? imageFromDataURL(image) : image;
+  shadow = createShadowCanvas(image);
+  data = shadow.imageData.data;
+
+  // Encode message
+  encodedMessage = encodeMessage(message);
+
   // Write Data
-  var delimiter = delimitMessage(modMessage, THRESHOLD);
-  var newImgInfo = writeMessage(data, modMessage);
+  var delimiter = delimitMessage(encodedMessage, THRESHOLD);
+  var newImgInfo = writeMessage(data, encodedMessage);
   var delimiterInfo = writeMessageDelimiter(newImgInfo.offset, newImgInfo.qSLength, delimiter, newImgInfo.data);
   data = clearRemainingData(delimiterInfo.stoppedAt, delimiterInfo.data);
 
