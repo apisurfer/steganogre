@@ -3,11 +3,7 @@ module.exports = {
   threshold: 1,
   codeUnitSize: 16,
 
-  args: function(i) {
-    return i + 1;
-  },
-
-  messageDelimiter: function(modMessage, threshold) {
+  delimitMessage: function(modMessage, threshold) {
     var delimiter = new Array(threshold * 3);
     var i;
 
@@ -18,7 +14,7 @@ module.exports = {
     return delimiter;
   },
 
-  messageCompleted: function(data, i) {
+  isMessageCompleted: function(data, i) {
     var done = true;
     var j;
 

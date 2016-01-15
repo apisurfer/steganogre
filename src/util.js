@@ -65,16 +65,5 @@ module.exports = {
     }
 
     return prod;
-  },
-
-  createArrayFromArgs: function(args, index, threshold) {
-    var ret = new Array(threshold - 1);
-    var i;
-
-    for(i = 0; i < threshold; i += 1) {
-      ret[i] = args(i >= index ? i + 1 : i);
-    }
-
-    return ret;
   }
 };

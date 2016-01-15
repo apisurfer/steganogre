@@ -139,10 +139,3 @@ describe('util.product', function () {
     expect(product(mul3, 17, opts)).toBe(492567075);
   });
 });
-
-describe('util.createArrayFromArgs', function () {
-  it('should create array with jump in values after given index and go up to treshold value', function () {
-    expect(createArrayFromArgs(config.args, 4, 7)).toEqual([1, 2, 3, 4, 6, 7, 8]);
-    expect(createArrayFromArgs(config.args, 3, 10)).toEqual([1, 2, 3, 5, 6, 7, 8, 9, 10, 11]);
-  });
-});
