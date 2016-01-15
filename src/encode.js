@@ -82,6 +82,22 @@ function alterImageData(qS, offset, data) {
   return data;
 }
 
+function writeMessage(imgData, modMessage) {
+  var qS;
+  var offset;
+
+  for (offset = 0; (offset + threshold) * 4 <= imgData.length && (offset + threshold) <= modMessage.length; offset += threshold) {
+    qS = calculateQs(offset, modMessage);
+    imgData = alterImageData(qS, offset, imgData);
+  }
+
+  return {
+    offset: offset,
+    qSLength: qS.length,
+    data: imgData,
+  };
+}
+
 module.exports = function(message, image) {
   image = image.length ? imageFromDataURL(image) : image;
 
@@ -139,14 +155,9 @@ module.exports = function(message, image) {
   var index;
   var subOffset;
   var delimiter = messageDelimiter(modMessage, threshold);
-  var qS;
+  var newImgInfo = writeMessage(data, modMessage);
 
-  for (offset = 0; (offset + threshold) * 4 <= data.length && (offset + threshold) <= modMessage.length; offset += threshold) {
-    qS = calculateQs(offset, modMessage);
-    data = alterImageData(qS, offset, data);
-  }
-
-  data = writeMessageDelimiter(offset, qS.length, delimiter, data);
+  data = writeMessageDelimiter(newImgInfo.offset, newImgInfo.qSLength, delimiter, newImgInfo.data);
   data = clearRemainingData(((index + 1) * 4) + 3, data);
 
   shadow.imageData.data = data;
