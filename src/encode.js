@@ -124,7 +124,7 @@ function handleOverlapping(index, dec, mask, curOverlapping, modMessage) {
     decM = dec & mask;
     modMessage.push(decM >> (CODE_UNIT_SIZE - T));
   } else if (((((OVERLAPPING * (index + 1)) % T) + (T - curOverlapping)) <= T)) {
-    decM = dec & mask;
+    decM = dec & mask;ndex
     modMessage.push(decM >> (((BUNDLES_PER_CHAR - 1) * T) + (T - curOverlapping)));
   }
 
@@ -151,38 +151,44 @@ function simpleEncode2(index, curOverlapping, dec, mask, modMessage) {
   };
 }
 
-function encodeMessage(message) {
-  var i;
-  var j
-  var oldDec;
-  var oldMask;
-  var decM;
-  // dec ... UTF-16 Unicode of the i-th character of the message
-  var dec;
-  // curOverlapping ... The count of the bits of the previous character not handled in the previous run
-  var curOverlapping;
+function encodeAndOverlap(index, curOverlapping, dec, oldDec, message, modMessage) {
   // mask ... The raw initial bitmask, will be changed every run and if bits are OVERLAPPING
   var mask;
-  var modMessage = [];
+  var oldMask;
   var left;
   var right;
+  var encData;
+
+  mask = Math.pow(2, T - curOverlapping) - 1;
+  oldMask = Math.pow(2, CODE_UNIT_SIZE) * (1 - Math.pow(2, -curOverlapping));
+  left = (dec & mask) << curOverlapping;
+  right = (oldDec & oldMask) >> (CODE_UNIT_SIZE - curOverlapping);
+  modMessage.push(left + right);
+
+  if (index < message.length) {
+    encData = simpleEncode2(index, curOverlapping, dec, mask, modMessage);
+    modMessage = encData.modMessage;
+    mask = encData.mask;
+  }
+
+  return modMessage;
+}
+
+function encodeMessage(message) {
+  var i;
+  var oldDec;
+  // dec - UTF-16 Unicode of the i-th character of the message
+  var dec;
+  // curOverlapping - The count of the bits of the previous character not handled in the previous run
+  var curOverlapping;
+  var modMessage = [];
 
   for (i = 0; i <= message.length; i++) {
     dec = message.charCodeAt(i) || 0;
     curOverlapping = (OVERLAPPING * i) % T;
 
     if (curOverlapping > 0 && oldDec) {
-      mask = Math.pow(2, T - curOverlapping) - 1;
-      oldMask = Math.pow(2, CODE_UNIT_SIZE) * (1 - Math.pow(2, -curOverlapping));
-      left = (dec & mask) << curOverlapping;
-      right = (oldDec & oldMask) >> (CODE_UNIT_SIZE - curOverlapping);
-      modMessage.push(left + right);
-
-      if (i < message.length) {
-        var encData = simpleEncode2(i, curOverlapping, dec, mask, modMessage);
-        modMessage = encData.modMessage;
-        mask = encData.mask;
-      }
+      modMessage = encodeAndOverlap(i, curOverlapping, dec, oldDec, message, modMessage);
     } else if (i < message.length) {
       modMessage = simpleEncode(dec, modMessage);
     }
