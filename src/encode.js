@@ -131,6 +131,26 @@ function handleOverlapping(index, dec, mask, curOverlapping, modMessage) {
   return modMessage;
 }
 
+// mutates modMessage
+function simpleEncode2(index, curOverlapping, dec, mask, modMessage) {
+  var mask = Math.pow(2, 2 * T - curOverlapping) * (1 - Math.pow(2, -T));
+  var j;
+  var decM;
+
+  for (j = 1; j < BUNDLES_PER_CHAR; j++) {
+    decM = dec & mask;
+    modMessage.push(decM >> (((j - 1) * T) + (T - curOverlapping)));
+    mask <<= T;
+  }
+
+  modMessage = handleOverlapping(index, dec, mask, curOverlapping, modMessage);
+
+  return {
+    mask: mask,
+    modMessage: modMessage,
+  };
+}
+
 function encodeMessage(message) {
   var i;
   var j
@@ -159,15 +179,9 @@ function encodeMessage(message) {
       modMessage.push(left + right);
 
       if (i < message.length) {
-        mask = Math.pow(2, 2 * T - curOverlapping) * (1 - Math.pow(2, -T));
-
-        for (j = 1; j < BUNDLES_PER_CHAR; j++) {
-          decM = dec & mask;
-          modMessage.push(decM >> (((j - 1) * T) + (T - curOverlapping)));
-          mask <<= T;
-        }
-
-        modMessage = handleOverlapping(i, dec, mask, curOverlapping, modMessage);
+        var encData = simpleEncode2(i, curOverlapping, dec, mask, modMessage);
+        modMessage = encData.modMessage;
+        mask = encData.mask;
       }
     } else if (i < message.length) {
       modMessage = simpleEncode(dec, modMessage);
