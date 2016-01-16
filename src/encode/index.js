@@ -1,17 +1,15 @@
-var config = require('./config');
-var util = require('./util');
-var imageFromDataURL = require('./imageFromDataURL');
-var createShadowCanvas = require('./createShadowCanvas');
+var conf = require('../config');
+var u = require('../util');
 
-var T = config.t;
-var THRESHOLD = config.threshold;
-var CODE_UNIT_SIZE = config.codeUnitSize;
+var T = conf.t;
+var THRESHOLD = conf.threshold;
+var CODE_UNIT_SIZE = conf.codeUnitSize;
 // BUNDLES_PER_CHAR ... Count of full t-bit-sized bundles per Character
 var BUNDLES_PER_CHAR = CODE_UNIT_SIZE / T >> 0;
 // OVERLAPPING ... Count of bits of the currently handled character which are not handled during each run
 var OVERLAPPING = CODE_UNIT_SIZE % T;
-var PRIME = util.findNextPrime(Math.pow(2, T));
-var delimitMessage = config.delimitMessage;
+var PRIME = u.findNextPrime(Math.pow(2, T));
+var delimitMessage = u.delimitMessage;
 
 /**
  * Following functions deal with writting the encoded message to an image data obj
@@ -204,8 +202,8 @@ module.exports = function(message, image) {
   var data;
   var encodedMessage;
 
-  image = image.length ? imageFromDataURL(image) : image;
-  shadow = createShadowCanvas(image);
+  image = image.length ? u.imageFromDataURL(image) : image;
+  shadow = u.createShadowCanvas(image);
   data = shadow.imageData.data;
 
   // Encode message

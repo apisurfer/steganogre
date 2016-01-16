@@ -1,16 +1,14 @@
-var config = require('./config');
-var util = require('./util');
-var imageFromDataURL = require('./imageFromDataURL');
-var createShadowCanvas = require('./createShadowCanvas');
-var CODE_UNIT_SIZE = config.codeUnitSize;
-var PRIME = util.findNextPrime(Math.pow(2, config.t));
+var conf = require('../config');
+var u = require('../util');
+var CODE_UNIT_SIZE = conf.codeUnitSize;
+var PRIME = u.findNextPrime(Math.pow(2, conf.t));
 
 function getModMessage(data) {
   var i = 3; // first alpha value
   var modMessage = [];
 
   while(i < data.length) {
-    if (config.isMessageCompleted(data, i)) break;
+    if (u.isMessageCompleted(data, i)) break;
 
     modMessage.push(data[i] - (255 - PRIME + 1));
     i += 4; // step only through alpha values
@@ -29,9 +27,9 @@ module.exports = function(image) {
   var i;
   var k;
 
-  image = image.length ? imageFromDataURL(image) : image;
+  image = image.length ? u.imageFromDataURL(image) : image;
 
-  shadow = createShadowCanvas(image);
+  shadow = u.createShadowCanvas(image);
   data = shadow.imageData.data;
 
   modMessage = getModMessage(data);
@@ -43,12 +41,12 @@ module.exports = function(image) {
 
   for (i = 0; i < modMessage.length; i += 1) {
     charCode += modMessage[i] << bitCount;
-    bitCount += config.t;
+    bitCount += conf.t;
 
     if (bitCount >= CODE_UNIT_SIZE) {
       message += String.fromCharCode(charCode & mask);
       bitCount %= CODE_UNIT_SIZE;
-      charCode = modMessage[i] >> (config.t - bitCount);
+      charCode = modMessage[i] >> (conf.t - bitCount);
     }
   }
 

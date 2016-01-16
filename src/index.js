@@ -8,7 +8,7 @@
 
 var encode = require('./encode');
 var decode = require('./decode');
-var getHidingCapacity = require('./getHidingCapacity');
+var getHidingCapacity = require('./util').getHidingCapacity;
 
 module.exports = {
   encode: encode,

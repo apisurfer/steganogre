@@ -1,4 +1,4 @@
-var config = require('./config');
+var config = require('../config');
 
 module.exports = function(image) {
   if (!image.width || !image.height) return 0;
