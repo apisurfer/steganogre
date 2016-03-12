@@ -8,35 +8,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <body>
-    <input id="file" type="file">
+    <h2>Decoded message from source code</h2>
     <br>
+    <div id="decoded-msg"></div>
+    <br><br>
+
+    <h2>File message</h2>
+    <br>
+    <input id="file" type="file">
+    <br><br>
+    <div id="file-decoded-msg"></div>
+
+    <h2>Write text and download as image</h2>
     <textarea name="" id="msg" cols="30" rows="10"></textarea>
     <br>
     <img src="" alt="" id="img">
-
-    <a href="" id="download">Download</a>
+    <a id="download" download="steganogre-test.png">Download</a>
+    <br><br>
 
     <script src="/static/steganogre.js"></script>
     <script>
       const msg = `32j4rwelq;fadsk;fjdalsn cmansmč{{s}};'la;dkf;ksafojawpok23;m432u482345678900)*&^%$#@kasmc./'`
       const encoded = steganogre.encode(msg)
 
-      console.log(msg)
-      console.log(encoded.dataURL)
-      console.log(encoded.downloadHref())
+      console.log('test message: ' + msg)
+      console.log('encoded object: ', encoded)
 
       const img = new Image()
       steganogre.decode('/test.png').then(function(msg) {
-        console.log(msg)
+        document.getElementById('decoded-msg').innerHTML = msg
       }, er => console.error(er))
     </script>
     <script>
       function handleFileSelect(evt) {
         var files = evt.target.files; // FileList object
-
         // Loop through the FileList and render image files as thumbnails.
         for (var i = 0, f; f = files[i]; i++) {
-
           // Only process image files.
           if (!f.type.match('image.*')) {
             continue;
@@ -47,16 +54,28 @@
           // Closure to capture the file information.
           reader.onload = (function(theFile) {
             return function(e) {
-              console.log(e.target.result);
+              var decoded = steganogre.decode(e.target.result);
+              decoded.then(function(msg) {
+                document.getElementById('file-decoded-msg').innerHTML = msg
+              });
             };
           })(f);
 
           // Read in the image file as a data URL.
-          // console.log(reader.readAsDataURL(f));
+          reader.readAsDataURL(f);
         }
       }
 
+      function handleMsgChange() {
+        const msg = document.getElementById('msg');
+        const link = document.getElementById('download');
+        const downloadHref = steganogre.encode(msg.value).downloadHref()
+
+        link.href = downloadHref;
+      }
+
       document.getElementById('file').addEventListener('change', handleFileSelect, false);
+      document.getElementById('msg').addEventListener('keyup', handleMsgChange, false);
     </script>
   </body>
 </html>
