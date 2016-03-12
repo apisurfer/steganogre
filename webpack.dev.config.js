@@ -18,6 +18,9 @@ module.exports = {
     filename: 'steganogre.js',
     pathInfo: true,
     publicPath: '/static/',
+    umdNamedDefine: true,
+    library: 'steganogre',
+    libraryTarget: 'umd',
   },
   module: {
     loaders: [
