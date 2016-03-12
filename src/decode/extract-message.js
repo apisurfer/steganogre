@@ -11,14 +11,7 @@ export default function extractMessage(imageData) {
     )
   }
 
-  // if we have a hanging byte drop it
-  if (msgChunks % 1 !== 0) {
-    msgChunks.pop()
-  }
-
   for (let i = 0; i < msgChunks.length; i += 2) {
-    console.log(msgChunks[i])
-    console.log(msgChunks[i + 1])
     msg += String.fromCharCode(
       (msgChunks[i] << 8) + msgChunks[i + 1]
     )
