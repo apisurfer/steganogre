@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "test": "./node_modules/karma/bin/karma start",
-    "dev": "./node_modules/.bin/webpack-dev-server --port 8888 --config webpack.dev.config.js",
+    "dev": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --config webpack.dev.config.js",
     "prod": "./node_modules/.bin/webpack -p --config webpack.prod.config.js"
   },
   "repository": {

@@ -1,14 +1,14 @@
 import createShadowCanvas from './util/create-shadow-canvas'
-import chunkMessage from './util/chunk-message'
+import encode from './encode/'
 import requiredPixels from './util/required-pixels'
 
-window.ccc = createShadowCanvas(1, 1)
-console.log(chunkMessage('a'))
+const msg = 'abcdefg'
+const pixelNum = requiredPixels(msg)
 
-window.steg = {
+const canvas = createShadowCanvas(pixelNum, 1)
+
+export default {
   createShadowCanvas,
-  chunkMessage,
+  encode,
   requiredPixels,
 }
-
-export default {}
