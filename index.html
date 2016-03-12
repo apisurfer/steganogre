@@ -8,7 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <body>
-    <h2>Decoded message from source code</h2>
+    <h2>Decoded message from test.png</h2>
+    <p>Note: contains all sort of characters for testing purposes</p>
     <br>
     <div id="decoded-msg"></div>
     <br><br>
@@ -28,11 +29,11 @@
 
     <script src="/dist/steganogre.min.js"></script>
     <script>
-      const msg = `32j4rwelq;fadsk;fjdalsn cmansmč{{s}};'la;dkf;ksafojawpok23;m432u482345678900)*&^%$#@kasmc./'`
-      const encoded = steganogre.encode(msg)
+      const msg = 'This is a predefined message coming from source code';
+      const encoded = steganogre.encode(msg);
 
-      console.log('test message: ' + msg)
-      console.log('encoded object: ', encoded)
+      console.log('Test encode on: ' + msg)
+      console.log('Encoded object: ', encoded)
 
       const img = new Image()
       steganogre.decode('/test.png').then(function(msg) {
