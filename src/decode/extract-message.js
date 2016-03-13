@@ -11,6 +11,12 @@ export default function extractMessage(imageData) {
     )
   }
 
+  // no need for "leftover" byte; utf-16 uses 2 bytes so
+  // when we have a hanging one from RGB components we discard it
+  if (msgChunks.length % 2 !== 0) {
+    msgChunks.pop()
+  }
+
   for (let i = 0; i < msgChunks.length; i += 2) {
     msg += String.fromCharCode(
       (msgChunks[i] << 8) + msgChunks[i + 1]
