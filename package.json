@@ -2,7 +2,7 @@
   "name": "steganogre",
   "version": "0.1.0",
   "description": "Simple steganography lib for browsers",
-  "main": "src/index.js",
+  "main": "dist/steganogre.min.js",
   "scripts": {
     "test": "./node_modules/karma/bin/karma start",
     "dev": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --config webpack.dev.config.js",
