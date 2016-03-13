@@ -1,5 +1,3 @@
-const charByteLength = 2 // js uses utf-16 for its source code and string type encoding
-
 export default function chunkMessage(msg) {
   const msgChunks = []
 

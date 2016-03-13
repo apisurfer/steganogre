@@ -16,6 +16,7 @@ export default function decode(imageURL) {
       )
 
       wrappedCanvas.drawImage(img)
+
       resolve(
         extractMessage(
           wrappedCanvas.getData()
