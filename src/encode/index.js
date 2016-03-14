@@ -1,4 +1,3 @@
-import hf from 'high-factors'
 import requiredPixels from '../util/required-pixels'
 import createShadowCanvas from '../util/create-shadow-canvas'
 import wrapCanvas from '../util/wrap-canvas'
@@ -6,8 +5,7 @@ import chunkMessage from './chunk-message'
 
 export default function encode(msg) {
   const pixelNum = requiredPixels(msg)
-  const imgDimensions = hf(pixelNum)
-  const canvas = createShadowCanvas(imgDimensions[0], imgDimensions[1])
+  const canvas = createShadowCanvas(pixelNum, 1)
   const wrappedCanvas = wrapCanvas(canvas)
   const chunks = chunkMessage(msg)
   wrappedCanvas.putData(chunks)
