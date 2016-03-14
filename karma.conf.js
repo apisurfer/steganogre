@@ -1,6 +1,3 @@
-// Karma configuration
-// Generated on Wed Oct 21 2015 19:31:07 GMT+0200 (CEST)
-
 module.exports = function(config) {
   config.set({
 
@@ -8,14 +5,14 @@ module.exports = function(config) {
     basePath: '',
 
     plugins: [
-      'karma-phantomjs-launcher',
-      'karma-browserify',
       'karma-jasmine',
+      'karma-webpack',
+      'karma-chrome-launcher',
     ],
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['browserify', 'jasmine'],
+    frameworks: ['jasmine'],
 
 
     // list of files / patterns to load in the browser
@@ -32,11 +29,7 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'test/**/*.js': [ 'browserify' ],
-    },
-
-    browserify: {
-      debug: true,
+      'test/**/*.js': [ 'webpack' ],
     },
 
     // test results reporter to use
@@ -64,7 +57,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['PhantomJS'],
+    browsers: ['Chrome'],
 
 
     // Continuous Integration mode
