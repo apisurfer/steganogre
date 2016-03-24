@@ -1,3 +1,5 @@
+var webpackConf = require('./webpack.dev.config.js');
+
 module.exports = function(config) {
   config.set({
 
@@ -7,7 +9,7 @@ module.exports = function(config) {
     plugins: [
       'karma-jasmine',
       'karma-webpack',
-      'karma-chrome-launcher',
+      'karma-phantomjs2-launcher',
     ],
 
     // frameworks to use
@@ -20,17 +22,15 @@ module.exports = function(config) {
       'test/**/*.js',
     ],
 
-
-    // list of files to exclude
-    exclude: [
-    ],
-
+    exclude: [],
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
       'test/**/*.js': [ 'webpack' ],
     },
+
+    webpack: webpackConf,
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
@@ -57,7 +57,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome'],
+    browsers: ['PhantomJS2'],
 
 
     // Continuous Integration mode
