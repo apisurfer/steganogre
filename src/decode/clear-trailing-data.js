@@ -16,7 +16,9 @@ export default function clearTrailingData(msgChunks) {
     }
   }
 
-  msgChunks.splice(-partsToTrim)
+  if (partsToTrim) {
+    msgChunks.splice(-partsToTrim)
+  }
 
   return msgChunks
 }
