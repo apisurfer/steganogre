@@ -2,7 +2,7 @@ import createShadowCanvas from '../util/create-shadow-canvas'
 import wrapCanvas from '../util/wrap-canvas'
 import extractMessage from './extract-message'
 
-export default function decode(imageURL) {
+export default function decode(imageURL, existingCanvas) {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.crossOrigin = 'Anonymous' // enable cross origin content
@@ -11,7 +11,8 @@ export default function decode(imageURL) {
       const wrappedCanvas = wrapCanvas(
         createShadowCanvas(
           img.width,
-          img.height
+          img.height,
+          existingCanvas
         )
       )
 
