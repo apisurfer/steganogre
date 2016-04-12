@@ -7,4 +7,6 @@ describe('decode', () => {
   it('should return Promise', () => {
     expect(decode(imgURI) instanceof Promise).toBe(true)
   })
+
+  // TODO: test response
 })
