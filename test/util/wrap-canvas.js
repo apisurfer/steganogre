@@ -21,7 +21,7 @@ describe('wrapCanvas', () => {
   })
 
   it('should return object with getData method that returns canvas img data', () => {
-    expect(wrap.getData().length).toBe(width * height * 4)
+    expect(wrap.getData().length).toBe(width * height * 3)
   })
 
   it('should return object with drawImage method that draws img to canvas', () => {
@@ -30,5 +30,15 @@ describe('wrapCanvas', () => {
 
   it('should return object with putData method that inserts img data to canvas', () => {
     expect(wrap.putData).toBeTruthy()
+  })
+
+  it('should consistently handle input and output of data', () => {
+    const canvas = createShadowCanvas(2, 1)
+    const wraped = wrapCanvas(canvas)
+    const data = [0, 102, 0, 111, 0, 111]
+
+    wraped.putData(data)
+
+    expect(wraped.getData()).toEqual(data)
   })
 })

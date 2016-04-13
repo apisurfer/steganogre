@@ -10,7 +10,20 @@ export default function wrapCanvas(canvas) {
   return {
     context,
     el: canvas,
-    getData: () => context.getImageData(0, 0, width, height).data,
+    getData: () => {
+      const imgData = context.getImageData(0, 0, width, height).data
+      const msgData = []
+
+      for (let i = 0; i < imgData.length; i++) {
+        if ((i + 1) % 4 === 0) { // skip every 4th; alpha channel(byte)
+          continue
+        }
+
+        msgData.push(imgData[i])
+      }
+
+      return msgData
+    },
     drawImage: img => context.drawImage(img, 0, 0),
     putData: dataArray => {
       const imageData = context.createImageData(
