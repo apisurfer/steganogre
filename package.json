@@ -6,7 +6,8 @@
   "scripts": {
     "test": "./node_modules/karma/bin/karma start",
     "dev": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --config webpack.dev.config.js",
-    "prod": "./node_modules/.bin/webpack -p --config webpack.prod.config.js"
+    "prod": "./node_modules/.bin/webpack -p --config webpack.prod.config.js",
+    "prod-decode": "./node_modules/.bin/webpack -p --config webpack.prod-decode.config.js"
   },
   "repository": {
     "type": "git",
