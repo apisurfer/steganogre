@@ -13,8 +13,6 @@ export default function encode(msg, existingCanvas) {
   wrappedCanvas.putData(chunks)
 
   const dataURL = wrappedCanvas.el.toDataURL('image/png')
-  wrappedCanvas.el.width = 0
-  wrappedCanvas.el.heigh = 0
 
   return {
     dataURL,
