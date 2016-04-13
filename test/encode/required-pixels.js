@@ -1,4 +1,4 @@
-import requiredPixels from '../../src/util/required-pixels'
+import requiredPixels from '../../src/encode/required-pixels'
 
 describe('requiredPixels', () => {
   it('should return 0 if no message is passed as arg', () => {

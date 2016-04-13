@@ -1,8 +1,8 @@
-import requiredPixels from '../util/required-pixels'
+import requiredPixels from './required-pixels'
 import calculateDimension from './calculate-dimension'
+import chunkMessage from './chunk-message'
 import createShadowCanvas from '../util/create-shadow-canvas'
 import wrapCanvas from '../util/wrap-canvas'
-import chunkMessage from './chunk-message'
 
 export default function encode(msg, existingCanvas) {
   const pixelNum = requiredPixels(msg)
