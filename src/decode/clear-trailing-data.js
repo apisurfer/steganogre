@@ -1,6 +1,7 @@
+import delimiter from '../util/delimiter'
+
 export default function clearTrailingData(msgChunks) {
-  const DELIMITER_LENGTH = 9
-  let threshold = DELIMITER_LENGTH
+  let threshold = delimiter().length
 
   while(msgChunks.length && threshold) {
     const val = msgChunks.pop()
