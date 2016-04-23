@@ -11,7 +11,7 @@ describe('requiredPixels', () => {
     expect(requiredPixels(msg))
       .toBe(
         Math.ceil(
-          msg.length * 2 / 3
+          (msg.length * 2 + 9) / 3
         )
       )
   })

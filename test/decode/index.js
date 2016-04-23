@@ -1,7 +1,7 @@
 import 'babel-polyfill'
 import decode from '../../src/decode/index'
 
-const imgURI = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAGklEQVQIW2NkSGP4nz8rn4GRIYnhf+K8IgYAMgoFsr/d3psAAAAASUVORK5CYII='
+const imgURI = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAAECAYAAACk7+45AAAAKElEQVQIW2NkSGP4nz8rn4GRIYnhf+K8IgbG/////2dgYIAwGBkZGQDwWg2vhr1KOQAAAABJRU5ErkJggg=='
 
 describe('decode', () => {
   it('should return Promise', () => {
