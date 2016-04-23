@@ -5,11 +5,11 @@ const imgURI = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAAECAYAAACk7+
 
 describe('decode', () => {
   it('should return Promise', () => {
-    expect(decode(imgURI) instanceof Promise).toBe(true)
+    expect(decode.decodeToString(imgURI) instanceof Promise).toBe(true)
   })
 
   it('should return correct value', (done) => {
-    decode(imgURI).then(data => {
+    decode.decodeToString(imgURI).then(data => {
       expect(data).toBe('foobar')
       done()
     })
