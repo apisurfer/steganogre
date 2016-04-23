@@ -5,15 +5,14 @@ import createShadowCanvas from '../util/create-shadow-canvas'
 import wrapCanvas from '../util/wrap-canvas'
 import delimitChunks from './delimit-chunks'
 
-export default function encode(msg, existingCanvas) {
-  const pixelNum = requiredPixels(msg)
-  const dimension = calculateDimension(pixelNum)
-  const canvas = createShadowCanvas(dimension.width, dimension.height, existingCanvas)
-  const wrappedCanvas = wrapCanvas(canvas)
-  const chunks = delimitChunks(chunkMessage(msg))
-  wrappedCanvas.putData(chunks)
+function encodeUint8Array(chunks, existingCanvas) {
+  const imgDimension = calculateDimension(requiredPixels(chunks.length))
+  const $canvas = wrapCanvas(createShadowCanvas(imgDimension.width, imgDimension.height, existingCanvas))
+  const delimitedChunks = delimitChunks(chunks)
 
-  const dataURL = wrappedCanvas.el.toDataURL('image/png')
+  $canvas.putData(delimitedChunks)
+
+  const dataURL = $canvas.el.toDataURL('image/png')
 
   return {
     dataURL,
@@ -21,4 +20,14 @@ export default function encode(msg, existingCanvas) {
       return this.dataURL.replace('image/png', 'image/octet-stream')
     },
   }
+}
+
+export default {
+  encodeString(msg, existingCanvas) {
+    const chunks = chunkMessage(msg)
+
+    return encodeUint8Array(chunks, existingCanvas)
+  },
+
+  encodeUint8Array,
 }
