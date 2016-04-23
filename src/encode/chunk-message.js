@@ -1,5 +1,3 @@
-import delimiter from '../util/delimiter'
-
 export default function chunkMessage(msg) {
   const msgChunks = []
 
@@ -10,5 +8,5 @@ export default function chunkMessage(msg) {
     msgChunks.push(charCode >>> 8, charCode & 0xFF)
   }
 
-  return msgChunks.concat(delimiter())
+  return msgChunks
 }

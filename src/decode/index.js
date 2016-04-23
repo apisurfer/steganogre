@@ -1,8 +1,9 @@
 import createShadowCanvas from '../util/create-shadow-canvas'
 import wrapCanvas from '../util/wrap-canvas'
+import clearTrailingData from './clear-trailing-data'
 import extractMessage from './extract-message'
 
-export default function decode(imageURL, existingCanvas) {
+function decodeToUint8Array(imageURL, existingCanvas) {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.crossOrigin = 'Anonymous' // enable cross origin content
@@ -19,7 +20,7 @@ export default function decode(imageURL, existingCanvas) {
       wrappedCanvas.drawImage(img)
 
       resolve(
-        extractMessage(
+        clearTrailingData(
           wrappedCanvas.getData()
         )
       )
@@ -27,4 +28,13 @@ export default function decode(imageURL, existingCanvas) {
 
     img.src = imageURL;
   })
+}
+
+
+export default {
+  decodeToString(imageURL, existingCanvas) {
+    return decodeToUint8Array(imageURL, existingCanvas).then(chunks => Promise.resolve(extractMessage(chunks)))
+  },
+
+  decodeToUint8Array,
 }

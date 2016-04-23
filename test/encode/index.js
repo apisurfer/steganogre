@@ -4,10 +4,10 @@ const expectedURL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAAECAYAA
 
 describe('encode', () => {
   it('should return the correct dataURL', () => {
-    expect(encode('foobar').dataURL).toEqual(expectedURL)
+    expect(encode.encodeString('foobar').dataURL).toEqual(expectedURL)
   })
 
   it('should return the correct download url', () => {
-    expect(encode('foobar').downloadHref()).toEqual(expectedURL.replace('image/png', 'image/octet-stream'))
+    expect(encode.encodeString('foobar').downloadHref()).toEqual(expectedURL.replace('image/png', 'image/octet-stream'))
   })
 })
