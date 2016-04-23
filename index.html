@@ -30,13 +30,13 @@
     <script src="/static/steganogre.js"></script>
     <script>
       const msg = 'This is a predefined message coming from source code';
-      const encoded = steganogre.encode(msg);
+      const encoded = steganogre.encodeString(msg);
 
       console.log('Test encode on: ' + msg)
       console.log('Encoded object: ', encoded)
 
       const img = new Image()
-      steganogre.decode('/test.png').then(function(msg) {
+      steganogre.decodeToString('/test.png').then(function(msg) {
         document.getElementById('decoded-msg').innerHTML = msg
       }, er => console.error(er))
     </script>
@@ -55,7 +55,7 @@
           // Closure to capture the file information.
           reader.onload = (function(theFile) {
             return function(e) {
-              var decoded = steganogre.decode(e.target.result);
+              var decoded = steganogre.decodeToString(e.target.result);
               decoded.then(function(msg) {
                 document.getElementById('file-decoded-msg').innerHTML = msg
               });
@@ -70,7 +70,7 @@
       function handleMsgChange() {
         const msg = document.getElementById('msg');
         const link = document.getElementById('download');
-        const downloadHref = steganogre.encode(msg.value).downloadHref()
+        const downloadHref = steganogre.encodeString(msg.value).downloadHref()
 
         link.href = downloadHref;
       }
