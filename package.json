@@ -1,6 +1,6 @@
 {
   "name": "steganogre",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "description": "Simple steganography lib for browsers",
   "main": "dist/steganogre.min.js",
   "scripts": {
