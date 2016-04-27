@@ -2,7 +2,7 @@ var fs = require('fs')
 var path = require('path')
 var Canvas = require('canvas')
 var minimist = require('minimist')
-var encode = require('./steganogre.min.js').encode
+var encodeString = require('./steganogre.min.js').encodeString
 
 var args = minimist(process.argv.slice(2))
 var msg = args.m
@@ -37,7 +37,7 @@ if (msg) {
 
 function writeMsgToFile(msg, filename) {
   var canvas = new Canvas(1, 1)
-  var wraped = encode(msg, canvas)
+  var wraped = encodeString(msg, canvas)
   var out = fs.createWriteStream(path.join(__dirname + '/' + filename))
   var stream = canvas.pngStream()
 
