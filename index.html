@@ -27,7 +27,7 @@
     <a id="download" download="steganogre-test.png">Download</a>
     <br><br>
 
-    <script src="/static/steganogre.js"></script>
+    <script src="/dist/steganogre.min.js"></script>
     <script>
       const msg = 'This is a predefined message coming from source code';
       const encoded = steganogre.encodeString(msg);
@@ -36,7 +36,7 @@
       console.log('Encoded object: ', encoded)
 
       const img = new Image()
-      steganogre.decodeToString('/test.png').then(function(msg) {
+      steganogre.decodeToString('http://i.imgur.com/knalLF7.png').then(function(msg) {
         document.getElementById('decoded-msg').innerHTML = msg
       }, er => console.error(er))
     </script>
