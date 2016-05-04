@@ -1,4 +1,4 @@
-![mascot](steganogre.png)
+![mascot](steganogre-med.png)
 
 
 # SteganOgre.js
