@@ -5,9 +5,8 @@
   "main": "dist/steganogre.min.js",
   "scripts": {
     "test": "./node_modules/karma/bin/karma start",
-    "dev": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --config webpack.dev.config.js",
-    "prod": "./node_modules/.bin/webpack -p --config webpack.prod.config.js",
-    "prod-decode": "./node_modules/.bin/webpack -p --config webpack.prod-decode.config.js"
+    "dev": "./node_modules/.bin/watchify ./src/index.js -v -o ./dist/steganogre.js -t [ babelify --presets es2015 stage-2 ] --standalone steganogre",
+    "prod": "./node_modules/.bin/browserify ./src/index.js -v -o ./dist/steganogre.min.js -t [ babelify --presets es2015 stage-2 ] -t [ uglifyify --compres --mangle --verbose ] --standalone steganogre"
   },
   "repository": {
     "type": "git",
@@ -33,12 +32,21 @@
     "babel-polyfill": "^6.7.4",
     "babel-preset-es2015": "^6.6.0",
     "babel-preset-stage-2": "^6.5.0",
+    "babelify": "^7.3.0",
+    "browserify": "^13.1.0",
     "jasmine": "^2.4.1",
-    "karma": "^0.13.22",
-    "karma-chrome-launcher": "^0.2.3",
-    "karma-jasmine": "^0.3.7",
-    "karma-webpack": "^1.7.0",
-    "webpack": "^1.12.14",
-    "webpack-dev-server": "^1.14.1"
+    "karma": "*",
+    "karma-browserify": "^5.1.0",
+    "karma-chrome-launcher": "*",
+    "karma-jasmine": "*",
+    "standard": "^8.1.0",
+    "watchify": "^3.7.0"
+  },
+  "standard": {
+    "globals": [
+      "describe",
+      "it",
+      "expect"
+    ]
   }
 }

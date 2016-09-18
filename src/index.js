@@ -1,7 +1,3 @@
-import encode from './encode/'
-import decode from './decode'
-
-module.exports = {
-  ...encode,
-  ...decode,
+export default function steganogre (strategy) {
+  throw Error('No strategy provided!')
 }
