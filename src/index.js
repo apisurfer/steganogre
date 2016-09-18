@@ -6,6 +6,6 @@ function verifyStrategy (strategy) {
   if (!strategy.calculateSize || typeof strategy.calculateSize !== 'function') throw Error('Strategy lacks calculateSize method!')
 }
 
-export default function steganogre (strategy) {
+export default function steganogre (strategy, existingCanvas) {
   verifyStrategy(strategy)
 }
