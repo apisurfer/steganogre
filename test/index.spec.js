@@ -1,4 +1,5 @@
 import s from '../src/index.js'
+import chunkString from '../src/util/chunk-string'
 
 describe('steganogre module initialization', () => {
   it('should throw if not provided with strategy', () => {
@@ -39,5 +40,21 @@ describe('steganogre module initialization', () => {
     const strategyMock = { encode () {}, decode () {}, calculateSize () {} }
 
     expect(s(strategyMock)._canvas().nodeName).toBe('CANVAS')
+  })
+})
+
+describe('encode', () => {
+  let strategyMock
+
+  beforeEach(() => {
+    strategyMock = { encode () {}, decode () {}, calculateSize () {} }
+
+    spyOn(strategyMock, 'encode')
+  })
+
+  it('should call the strategie\'s encode method and provide chunked message', () => {
+    const instance = s(strategyMock)
+    instance.encode('foobar')
+    expect(strategyMock.encode).toHaveBeenCalledWith(chunkString('foobar'))
   })
 })
