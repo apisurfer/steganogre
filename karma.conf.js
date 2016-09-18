@@ -7,7 +7,7 @@ module.exports = function(config) {
     plugins: [
       'karma-browserify',
       'karma-jasmine',
-      'karma-chrome-launcher',
+      'karma-chrome-launcher'
     ],
 
     // frameworks to use
@@ -16,7 +16,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'test/**/*.js',
+      'test/**/*.js'
     ],
 
     exclude: [],
@@ -31,10 +31,9 @@ module.exports = function(config) {
       debug: true,
       transform: [
         ['babelify', {
-          'presets': ['es2015', 'stage-2'],
+          'presets': ['es2015', 'stage-2']
         }]
-      ],
-      standalone: 'steganogre'
+      ]
     },
 
     watchify: {
