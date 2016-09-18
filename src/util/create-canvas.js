@@ -1,7 +1,7 @@
 export default function createCanvas () {
   const c = document.createElement('canvas')
-  c.width = 0
-  c.height = 0
+  c.width = 1
+  c.height = 1
 
   return c
 }
