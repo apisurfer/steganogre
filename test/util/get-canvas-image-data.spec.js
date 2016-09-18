@@ -8,7 +8,7 @@ describe('getCanvasImageData', () => {
 
     expect(canvasImageData instanceof Uint8ClampedArray).toBe(true)
 
-    expect(canvasImageData.length)
-      .toBe(canvas.width * canvas.height * 4)
+    expect(Array.from(canvasImageData))
+      .toEqual([0,0,0,0])
   })
 })
