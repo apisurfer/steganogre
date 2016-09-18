@@ -1,6 +1,6 @@
 import createCanvas from '../../src/util/create-canvas'
 
-describe('createShadowCanvas', () => {
+describe('createCanvas', () => {
   it('should create a canvas element width 0x0 dimensions', () => {
     const c = createCanvas()
     expect(c.nodeName).toBe('CANVAS')
