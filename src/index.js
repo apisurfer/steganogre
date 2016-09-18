@@ -1,3 +1,5 @@
+import createCanvas from './util/create-canvas'
+
 function verifyStrategy (strategy) {
   if (!strategy) throw Error('No strategy provided!')
 
@@ -8,4 +10,13 @@ function verifyStrategy (strategy) {
 
 export default function steganogre (strategy, existingCanvas) {
   verifyStrategy(strategy)
+
+  return {
+    _strategy () {
+      return strategy
+    },
+    _canvas () {
+      return existingCanvas || createCanvas()
+    }
+  }
 }
