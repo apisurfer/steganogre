@@ -9,7 +9,7 @@ function verifyStrategy (strategy) {
   if (!strategy.canStoreMessage || typeof strategy.canStoreMessage !== 'function') throw Error('Strategy lacks canStoreMessage method!')
 }
 
-export default function steganogre (strategy, existingCanvas) {
+export default function steganogre (strategy, canvas = createCanvas()) {
   verifyStrategy(strategy)
 
   return {
@@ -17,7 +17,7 @@ export default function steganogre (strategy, existingCanvas) {
       return strategy
     },
     _canvas () {
-      return existingCanvas || createCanvas()
+      return canvas
     },
     encode (messageString) {
       const msgChunks = chunkString(messageString)
