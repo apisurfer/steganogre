@@ -7,13 +7,13 @@ describe('steganogre module initialization', () => {
   })
 
   it('should throw if bad strategy doesn\'t have a encode function', () => {
-    const strategyMock = { decode () {}, calculateSize () {} }
+    const strategyMock = { decode () {}, canStoreMessage () {} }
 
     expect(() => s(strategyMock)).toThrowError(/Strategy lacks encode method!/i)
   })
 
   it('should throw if bad strategy doesn\'t have a decode function', () => {
-    const strategyMock = { encode () {}, calculateSize () {} }
+    const strategyMock = { encode () {}, canStoreMessage () {} }
 
     expect(() => s(strategyMock)).toThrowError(/Strategy lacks decode method!/i)
   })
@@ -21,33 +21,33 @@ describe('steganogre module initialization', () => {
   it('should throw if bad strategy doesn\'t have a de function', () => {
     const strategyMock = { encode () {}, decode () {} }
 
-    expect(() => s(strategyMock)).toThrowError(/Strategy lacks calculateSize method!/i)
+    expect(() => s(strategyMock)).toThrowError(/Strategy lacks canStoreMessage method!/i)
   })
 
   it('should return object with method to access defined strategy', () => {
-    const strategyMock = { encode () {}, decode () {}, calculateSize () {} }
+    const strategyMock = { encode () {}, decode () {}, canStoreMessage () {} }
     expect(s(strategyMock)._strategy()).toBe(strategyMock)
   })
 
   it('should return object with method to access canvas if provided', () => {
-    const strategyMock = { encode () {}, decode () {}, calculateSize () {} }
+    const strategyMock = { encode () {}, decode () {}, canStoreMessage () {} }
     const canvas = document.createElement('canvas')
 
     expect(s(strategyMock, canvas)._canvas()).toBe(canvas)
   })
 
   it('should return object with method to access created canvas if none is provided', () => {
-    const strategyMock = { encode () {}, decode () {}, calculateSize () {} }
+    const strategyMock = { encode () {}, decode () {}, canStoreMessage () {} }
 
     expect(s(strategyMock)._canvas().nodeName).toBe('CANVAS')
   })
 })
 
-describe('encode', () => {
+describe('steganogre.encode', () => {
   let strategyMock
 
   beforeEach(() => {
-    strategyMock = { encode () {}, decode () {}, calculateSize () {} }
+    strategyMock = { encode () {}, decode () {}, canStoreMessage () {} }
 
     spyOn(strategyMock, 'encode')
   })
