@@ -1,5 +1,6 @@
 import createCanvas from './util/create-canvas'
 import chunkString from './util/chunk-string'
+import getCanvasImageData from './util/get-canvas-image-data'
 
 function verifyStrategy (strategy) {
   if (!strategy) throw Error('No strategy provided!')
@@ -19,6 +20,14 @@ export default function steganogre (strategy, canvas = createCanvas()) {
     _canvas () {
       return canvas
     },
+
+    canStoreMessage (message) {
+      return strategy.canStoreMessage(
+        getCanvasImageData(canvas),
+        message
+      )
+    },
+
     encode (messageString) {
       const msgChunks = chunkString(messageString)
 

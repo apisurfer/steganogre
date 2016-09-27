@@ -1,5 +1,6 @@
 import s from '../src/index.js'
 import chunkString from '../src/util/chunk-string'
+import getCanvasImageData from '../src/util/get-canvas-image-data'
 
 describe('steganogre module initialization', () => {
   it('should throw if not provided with strategy', () => {
@@ -40,6 +41,36 @@ describe('steganogre module initialization', () => {
     const strategyMock = { encode () {}, decode () {}, canStoreMessage () {} }
 
     expect(s(strategyMock)._canvas().nodeName).toBe('CANVAS')
+  })
+})
+
+describe('steganogre.canStoreMessage', () => {
+  let strategyMock
+  beforeEach(() => {
+    strategyMock = { encode () {}, decode () {}, canStoreMessage () {} }
+
+    spyOn(strategyMock, 'canStoreMessage').and.returnValues(
+      true,
+      false
+    )
+  })
+
+  it('should call strategy.canStoreMessage with imageData array and message string', () => {
+    const instance = s(strategyMock)
+    const canvas = instance._canvas()
+    const message = 'foobar'
+
+    instance.canStoreMessage(message)
+
+    expect(strategyMock.canStoreMessage).toHaveBeenCalledWith(
+      getCanvasImageData(canvas),
+      message
+    )
+  })
+
+  it('should return result from strategy.canStoreMessage', () => {
+    expect(s(strategyMock).canStoreMessage()).toBe(true)
+    expect(s(strategyMock).canStoreMessage()).toBe(false)
   })
 })
 
