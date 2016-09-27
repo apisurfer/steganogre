@@ -8,8 +8,7 @@ module.exports = function(config) {
       'karma-browserify',
       'karma-jasmine',
       'karma-chrome-launcher',
-      'karma-firefox-launcher',
-      'karma-safari-launcher'
+      'karma-firefox-launcher'
     ],
 
     // frameworks to use
@@ -63,7 +62,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome', 'Firefox', 'Safari'],
+    browsers: ['Chrome', 'Firefox'],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
