@@ -5,9 +5,15 @@ import getCanvasImageData from './util/get-canvas-image-data'
 function verifyStrategy (strategy) {
   if (!strategy) throw Error('No strategy provided!')
 
-  if (!strategy.encode || typeof strategy.encode !== 'function') throw Error('Strategy lacks encode method!')
-  if (!strategy.decode || typeof strategy.decode !== 'function') throw Error('Strategy lacks decode method!')
-  if (!strategy.canStoreMessage || typeof strategy.canStoreMessage !== 'function') throw Error('Strategy lacks canStoreMessage method!')
+  if (!strategy.encode || typeof strategy.encode !== 'function' ||
+    !strategy.decode || typeof strategy.decode !== 'function' ||
+    !strategy.canStoreMessage || typeof strategy.canStoreMessage !== 'function' ||
+    !strategy.capacity || typeof strategy.capacity !== 'function') {
+    throw new Error(
+      'Your strategy is missing some of the required methods. ' +
+      '[encode, decode, canStoreMessage, capacity]'
+    )
+  }
 }
 
 export default function steganogre (strategy, canvas = createCanvas()) {
