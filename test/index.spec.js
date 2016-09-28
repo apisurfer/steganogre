@@ -80,12 +80,33 @@ describe('steganogre.encode', () => {
   beforeEach(() => {
     strategyMock = { encode () {}, decode () {}, canStoreMessage () {} }
 
-    spyOn(strategyMock, 'encode')
+    spyOn(strategyMock, 'encode').and.returnValue(Promise.resolve('encoded value'))
+    spyOn(strategyMock, 'canStoreMessage').and.returnValues(true, false)
   })
 
-  it('should call the strategie\'s encode method and provide chunked message', () => {
+  it('should encode if strategy returns true from its canStoreMessage', () => {
     const instance = s(strategyMock)
+    spyOn(instance, 'canStoreMessage').and.callThrough()
     instance.encode('foobar')
+
+    expect(strategyMock.canStoreMessage).toHaveBeenCalledTimes(1)
     expect(strategyMock.encode).toHaveBeenCalledWith(chunkString('foobar'))
+
+    // another try, will get false from strategyMock.canStoreMessage
+    instance.encode('foobar2')
+    expect(strategyMock.canStoreMessage).toHaveBeenCalledTimes(2)
+    expect(strategyMock.encode).toHaveBeenCalledTimes(1)
+    expect(strategyMock.encode).not.toHaveBeenCalledWith(chunkString('foobar2'))
+  })
+
+  it('should call the strategie\'s encode method and return the value', done => {
+    const instance = s(strategyMock)
+    const encodedMessage = instance.encode('foobar')
+
+    expect(strategyMock.encode).toHaveBeenCalledWith(chunkString('foobar'))
+    encodedMessage.then(response => {
+      expect(response).toBe('encoded value')
+      done()
+    })
   })
 })

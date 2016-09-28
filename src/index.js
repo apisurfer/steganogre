@@ -28,10 +28,12 @@ export default function steganogre (strategy, canvas = createCanvas()) {
       )
     },
 
-    encode (messageString) {
-      const msgChunks = chunkString(messageString)
+    encode (message) {
+      const msgChunks = chunkString(message)
 
-      this._strategy().encode(msgChunks)
+      if (this.canStoreMessage(message)) {
+        return this._strategy().encode(msgChunks)
+      }
     }
   }
 }
