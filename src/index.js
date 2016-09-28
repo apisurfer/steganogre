@@ -34,6 +34,10 @@ export default function steganogre (strategy, canvas = createCanvas()) {
       )
     },
 
+    capacity () {
+      return strategy.capacity(getCanvasImageData(canvas))
+    },
+
     encode (message) {
       const msgChunks = chunkString(message)
 

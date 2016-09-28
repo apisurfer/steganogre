@@ -86,28 +86,31 @@ describe('steganogre.capacity', () => {
   beforeEach(() => {
     strategyMock = strategyEmptyMock()
 
-    spyOn(strategyMock, 'canStoreMessage').and.returnValues(
-      true,
-      false
+    spyOn(strategyMock, 'capacity').and.returnValues(
+      100,
+      300
     )
   })
 
-  it('should call strategy.canStoreMessage with imageData array and message string', () => {
+  it('should call strategy.capacity with imageData array', () => {
     const instance = s(strategyMock)
     const canvas = instance._canvas()
-    const message = 'foobar'
 
-    instance.canStoreMessage(message)
-
-    expect(strategyMock.canStoreMessage).toHaveBeenCalledWith(
-      getCanvasImageData(canvas),
-      message
+    instance.capacity()
+    expect(strategyMock.capacity).toHaveBeenCalledWith(
+      getCanvasImageData(canvas)
     )
+
+    instance.capacity()
+    expect(strategyMock.capacity).toHaveBeenCalledWith(
+      getCanvasImageData(canvas)
+    )
+    expect(strategyMock.capacity).toHaveBeenCalledTimes(2)
   })
 
-  it('should return result from strategy.canStoreMessage', () => {
-    expect(s(strategyMock).canStoreMessage()).toBe(true)
-    expect(s(strategyMock).canStoreMessage()).toBe(false)
+  it('should return result from strategy.capacity', () => {
+    expect(s(strategyMock).capacity()).toBe(100)
+    expect(s(strategyMock).capacity()).toBe(300)
   })
 })
 
