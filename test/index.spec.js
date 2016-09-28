@@ -19,7 +19,7 @@ describe('steganogre module initialization', () => {
     expect(() => s(strategyMock)).toThrowError(/Strategy lacks decode method!/i)
   })
 
-  it('should throw if bad strategy doesn\'t have a de function', () => {
+  it('should throw if bad strategy doesn\'t have a canStoreMessage function', () => {
     const strategyMock = { encode () {}, decode () {} }
 
     expect(() => s(strategyMock)).toThrowError(/Strategy lacks canStoreMessage method!/i)
