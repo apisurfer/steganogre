@@ -1,5 +1,6 @@
 import s from '../src/index.js'
 import chunkString from '../src/util/chunk-string'
+import createCanvas from '../src/util/create-canvas'
 import getCanvasImageData from '../src/util/get-canvas-image-data'
 import delimitChunks from '../src/util/delimit-chunks'
 import calculateRequiredPixels from '../src/util/calculate-required-pixels'
@@ -197,3 +198,66 @@ describe('steganogre.encode', () => {
     })
   })
 })
+
+describe('steganogre.decode', () => {
+  let strategyMock
+  let imgSrc
+
+  beforeEach(() => {
+    strategyMock = strategyEmptyMock()
+    imgSrc = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAAECAYAAACk7+45AAAAKElEQVQIW2NkSGP4nz8rn4GRIYnhf+K8IgbG/////2dgYIAwGBkZGQDwWg2vhr1KOQAAAABJRU5ErkJggg=='
+
+    spyOn(strategyMock, 'decode').and.returnValue(Promise.resolve('foobar'))
+  })
+
+  it('should resize the canvas to match the image size', done => {
+    const instance = s(strategyMock)
+    instance.decode(imgSrc).then(data => {
+      const img = new Image()
+
+      img.onload = () => {
+        const { width, height } = img
+        expect(instance._canvas().width).toBe(width)
+        expect(instance._canvas().height).toBe(height)
+        done()
+      }
+
+      img.src = imgSrc
+    })
+  })
+
+  it('should call the strategies decode method', done => {
+    const instance = s(strategyMock)
+    instance.decode(imgSrc).then(data => {
+      const img = new Image()
+
+      img.onload = () => {
+        const { width, height } = img
+        const canvas = createCanvas()
+
+        canvas.width = width
+        canvas.height = height
+
+        expect(strategyMock.decode).toHaveBeenCalledTimes(1)
+        // TODO replace imgSrc with never data; this one contains trailing 9 bytes; we clear only 3
+        // console.log(strategyMock.decode.calls.argsFor(0))
+        // expect(strategyMock.decode).toHaveBeenCalledWith([ 0,102,0,255,111,0,111,255,0,98,0,255,97,0,114,255,255,255,255,255,255,255,255,255,255,255,255,255,0,0,0,255 ])
+        done()
+      }
+
+      img.src = imgSrc
+    })
+  })
+
+  // it('should return Promise', () => {
+  //   expect(decode.decodeToString(imgURI) instanceof Promise).toBe(true)
+  // })
+  //
+  // it('should return correct value', (done) => {
+  //   decode.decodeToString(imgURI).then(data => {
+  //     expect(data).toBe('foobar')
+  //     done()
+  //   })
+  // })
+})
+

@@ -5,6 +5,8 @@ import delimitChunks from './util/delimit-chunks'
 import calculateRequiredPixels from './util/calculate-required-pixels'
 import calculateImageDimensions from './util/calculate-image-dimensions'
 import setCanvasImageData from './util/set-canvas-image-data'
+import stripAlphaChannel from './util/strip-alpha-channel'
+import clearTrailingData from './util/clear-trailing-data'
 
 function verifyStrategy (strategy) {
   if (!strategy) throw Error('No strategy provided!')
@@ -71,6 +73,33 @@ export default function steganogre (strategy, canvas = createCanvas()) {
             return imageArrayData
           })
       }
+    },
+
+    decode (imageSrc) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'Anonymous' // enable cross origin content
+
+        img.onload = () => {
+          const { width, height } = img
+
+          this._canvas().width = width
+          this._canvas().height = height
+          this._canvas().getContext('2d').drawImage(img, 0, 0)
+
+          const imageArrayData = getCanvasImageData(this._canvas())
+          const decoded = this._strategy().decode(imageArrayData)
+
+          decoded.then(imageData => {
+            resolve(clearTrailingData(stripAlphaChannel(imageData)))
+          })
+
+        }
+
+        img.onerror = (...args) => reject(...args)
+
+        img.src = imageSrc
+      })
     }
   }
 }
