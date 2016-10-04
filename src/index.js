@@ -1,6 +1,10 @@
 import createCanvas from './util/create-canvas'
 import chunkString from './util/chunk-string'
 import getCanvasImageData from './util/get-canvas-image-data'
+import delimitChunks from './util/delimit-chunks'
+import calculateRequiredPixels from './util/calculate-required-pixels'
+import calculateImageDimensions from './util/calculate-image-dimensions'
+import setCanvasImageData from './util/set-canvas-image-data'
 
 function verifyStrategy (strategy) {
   if (!strategy) throw Error('No strategy provided!')
@@ -27,6 +31,14 @@ export default function steganogre (strategy, canvas = createCanvas()) {
       return canvas
     },
 
+    getByteSize (message) {
+      if (!(message instanceof Uint8ClampedArray)) {
+        message = chunkString(message)
+      }
+
+      return message.length
+    },
+
     canStoreMessage (message) {
       return strategy.canStoreMessage(
         getCanvasImageData(canvas),
@@ -39,10 +51,25 @@ export default function steganogre (strategy, canvas = createCanvas()) {
     },
 
     encode (message) {
-      const msgChunks = chunkString(message)
+      if (!(message instanceof Uint8ClampedArray)) {
+        message = chunkString(message)
+      }
 
       if (this.canStoreMessage(message)) {
-        return this._strategy().encode(msgChunks)
+        return this
+          ._strategy()
+          .encode(message)
+          .then(imageArrayData => {
+            const delimitedData = delimitChunks(imageArrayData)
+            const requiredPixels = calculateRequiredPixels(delimitedData.length)
+            const {width, height} = calculateImageDimensions(requiredPixels)
+
+            this._canvas().width = width
+            this._canvas().height = height
+            setCanvasImageData(this._canvas(), delimitedData)
+
+            return imageArrayData
+          })
       }
     }
   }

@@ -1,6 +1,11 @@
 import s from '../src/index.js'
 import chunkString from '../src/util/chunk-string'
 import getCanvasImageData from '../src/util/get-canvas-image-data'
+import delimitChunks from '../src/util/delimit-chunks'
+import calculateRequiredPixels from '../src/util/calculate-required-pixels'
+import calculateImageDimensions from '../src/util/calculate-image-dimensions'
+import stripAlphaChannel from '../src/util/strip-alpha-channel'
+import clearTrailingData from '../src/util/clear-trailing-data'
 
 const strategyEmptyMock = () => ({
   encode () {},
@@ -120,11 +125,11 @@ describe('steganogre.encode', () => {
   beforeEach(() => {
     strategyMock = strategyEmptyMock()
 
-    spyOn(strategyMock, 'encode').and.returnValue(Promise.resolve('encoded value'))
+    spyOn(strategyMock, 'encode').and.returnValue(Promise.resolve([1, 2, 3, 4, 5]))
     spyOn(strategyMock, 'canStoreMessage').and.returnValues(true, false)
   })
 
-  it('should encode if strategy returns true from its canStoreMessage', () => {
+  it('should encode only if strategy returns true from its canStoreMessage', () => {
     const instance = s(strategyMock)
     spyOn(instance, 'canStoreMessage').and.callThrough()
     instance.encode('foobar')
@@ -139,13 +144,55 @@ describe('steganogre.encode', () => {
     expect(strategyMock.encode).not.toHaveBeenCalledWith(chunkString('foobar2'))
   })
 
-  it('should call the strategie\'s encode method and return the value', done => {
+  it('should chunk if the message is not an Uint8ClampedArray', () => {
+    const instance = s(strategyMock)
+    spyOn(instance, 'canStoreMessage').and.returnValue(true)
+    const msg = 'foobar'
+    const chunked = chunkString(msg)
+    instance.encode(msg)
+    expect(instance.canStoreMessage).toHaveBeenCalledWith(chunked)
+  })
+
+  it('should call the strategie\'s encode method and return resolved value', done => {
     const instance = s(strategyMock)
     const encodedMessage = instance.encode('foobar')
 
     expect(strategyMock.encode).toHaveBeenCalledWith(chunkString('foobar'))
     encodedMessage.then(response => {
-      expect(response).toBe('encoded value')
+      expect(response).toEqual([1, 2, 3, 4, 5])
+      done()
+    })
+  })
+
+  it('should resize canvas to accomodate data', done => {
+    const instance = s(strategyMock)
+    const encoded = instance.encode('foobar')
+
+    encoded.then(imageData => {
+      const data = delimitChunks(imageData)
+      const requiredPixels = calculateRequiredPixels(data.length)
+      const { width, height } = calculateImageDimensions(requiredPixels)
+
+      expect(instance._canvas().width).toBe(width)
+      expect(instance._canvas().height).toBe(height)
+      done()
+    })
+  })
+
+  it('should place delimited data onto canvas', done => {
+    const instance = s(strategyMock)
+    const encoded = instance.encode('whatever')
+
+    encoded.then(imageData => {
+      const data = imageData
+
+      expect(
+        clearTrailingData(
+          stripAlphaChannel(
+            getCanvasImageData(instance._canvas())
+          )
+        )
+      ).toEqual(data)
       done()
     })
   })
