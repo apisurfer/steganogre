@@ -40,6 +40,7 @@
     "karma-firefox-launcher": "^1.0.0",
     "karma-jasmine": "^1.0.2",
     "standard": "^8.1.0",
+    "uglifyify": "^3.0.4",
     "watchify": "^3.7.0"
   },
   "standard": {
