@@ -5,8 +5,8 @@
   "main": "dist/steganogre.min.js",
   "scripts": {
     "test": "./node_modules/karma/bin/karma start",
-    "dev": "./node_modules/.bin/watchify ./src/index.js -v -o ./dist/steganogre.js -t [ babelify --presets es2015 stage-2 ] --standalone steganogre",
-    "prod": "./node_modules/.bin/browserify ./src/index.js -v -o ./dist/steganogre.min.js -t [ babelify --presets es2015 stage-2 ] -t [ uglifyify --compres --mangle --verbose ] --standalone steganogre"
+    "dev": "./node_modules/.bin/watchify ./src/index.js -s steganogre -v -o ./dist/steganogre.js -t [ babelify --presets es2015 stage-2 ]",
+    "prod": "./node_modules/.bin/browserify ./src/index.js -s steganogre -v -o ./dist/steganogre.min.js -t [ babelify --presets es2015 stage-2 ] -t [ uglifyify --compres --mangle --verbose ]"
   },
   "repository": {
     "type": "git",
